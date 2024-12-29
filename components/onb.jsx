@@ -11,7 +11,7 @@ const Onb = ({item}) => {
   return (
     <View className='bg-white flex-1 w-[100vw]'>
     
-      <View className='bg-white  items-center h-[55%] px-4 py-4 w-full justify-end z-[3]'>
+      <View className='items-center h-[50%] px-4 py-4 w-full justify-end z-[3]'>
 
      
 
@@ -25,7 +25,7 @@ const Onb = ({item}) => {
       <View className='bg-white h-[35%] rounded-b-full absolute w-[110%] top-[31%] left-[-5%] z-[1]' > 
       </View>
 
-      <View className='bg-primary h-[50%] py-28 px-6 z-[0] items-center'>
+      <View className='bg-primary h-[50%] py-40 px-6 z-[0] items-center'>
         <Text className='text-white font-inter font-normal text-sm text-center'>{item.des}</Text>
 
         
