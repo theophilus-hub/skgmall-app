@@ -29,21 +29,16 @@ AppState.addEventListener('change', (state) => {
 })
 
 
-export async function signUpWithEmail(email, password) {
-    
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({email: email, password: password })
+export async function signUpWithEmail(email: string, password: string) {
+    const { data: { session }, error } = await supabase.auth.signUp({email: email, password: password })
 
-      if (error) {
-        throw new Error(error)       
-      }
-  
-  }
+    if(error) {
+        throw error;       
+    }  
+}
 
 
-export async function signInWithEmail(email, password) {
+export async function signInWithEmail(email: string, password: string) {
   
     const { error } = await supabase.auth.signInWithPassword({
         email: email,
@@ -55,7 +50,7 @@ export async function signInWithEmail(email, password) {
     }
 
 
-export async function updateUserProfile(id, firstName, lastName, phoneNumber) {
+export async function updateUserProfile(id: string, firstName: string, lastName: number, phoneNumber: number) {
 
   const { error } = await supabase
   .from('profiles')
@@ -73,7 +68,7 @@ export async function clientSession() {
   console.log(error)
 
   if (error) {
-    throw new Error(error)
+    throw error
   }
 
 }
@@ -93,7 +88,7 @@ export async function getData(){
 
   
   if(error){
-    throw new Error(error);
+    throw error;
   }else{
    return(
     {data}

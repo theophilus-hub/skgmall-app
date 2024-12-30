@@ -114,7 +114,7 @@ a hassle-free dining experience every time.</Text>
 <SafeAreaView className='bg-white h-[105vh] pt-[20px]'>
     <FlatList
       data={onbData}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item.id.toString()}
       renderItem={(item) => {
         //
         return(

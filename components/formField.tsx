@@ -3,13 +3,17 @@ import React, { useState } from 'react';
 import eye from '../assets/images/auth/eye.png';
 import eyeSlash from '../assets/images/auth/eye-slash.png';
 
+export interface FormFieldProps{
+    placeholder?: string, value: string, 
+    handeChangeText?: (text: string) => void,
+    inputType?: String
+}
 
-
-const FormField = ({placeholder, value, handeChangeText, inputType, ...props}) => {
+const FormField: React.FC<FormFieldProps>  = ({placeholder, value, handeChangeText, inputType }) => {
   const [showPassword, setShowPassword] = useState(false)
   return (
     <View className='flex flex-row bg-notwhite w-[343px] h-[49]  rounded-[10px]  px-8 my-2 justify-start content-center items-center focus:border focus:border-slate-300 '>
-      <TextInput 
+      <TextInput
         className=' text-black opacity-80 font-inter font-medium text-sm w-full h-8  '
         placeholder={placeholder}
         placeholderTextColor='#2D2D2DCC'
