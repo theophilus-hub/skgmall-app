@@ -34,7 +34,9 @@ export async function signUpWithEmail(email: string, password: string) {
 
     if(error) {
         throw error;       
-    }  
+    }
+
+    return session;
 }
 
 
@@ -63,7 +65,7 @@ export async function updateUserProfile(id: string, firstName: string, lastName:
 }
 
 export async function clientSession() {
-  const { data, error } = await supabase.auth.getSession()
+  const { data: { session }, error } = await supabase.auth.getSession()
 
   console.log(error)
 
@@ -71,12 +73,15 @@ export async function clientSession() {
     throw error
   }
 
+  return session;
 }
 
 
 
 export async function getUser() {
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser();
+
+  return user;
 }
 
 

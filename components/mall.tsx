@@ -3,7 +3,7 @@ import NextArrow from '../assets/images/tabs/mall/next.png'
 import StoreSideScroll from './storeSideScroll';
 
 export interface MallProps{
-    data: { id: number },
+    data: { id: number, storeCat: number, promo: string, closed: string, icon: string, name: string, openT: String, closeT: String }[],
     catData: { id: number, uid: number, name: string }[]
 }
 
