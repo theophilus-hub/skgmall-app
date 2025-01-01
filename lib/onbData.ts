@@ -20,6 +20,5 @@ export const onbData = [
         image: require('../assets/images/onb/order food illustration.png'),
         size: 'h-[250px] w-[260.89px]'
     },
-    
 
 ]

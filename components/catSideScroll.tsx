@@ -1,12 +1,16 @@
 import { View, Text, FlatList } from 'react-native'
 import React, { Children } from 'react'
-import Cat from './category'
+import Cat from './category';
 
-const CatSideScroll = ({data}) => {
+export interface CatSideScrollProps{
+    data: Array<{ id: number, name: string, icon_url: string }>
+}
+
+const CatSideScroll: React.FC<CatSideScrollProps> = ({data}) => {
   return (
-    <FlatList className=' text-black ' 
+    <FlatList className='text-black' 
         data = {data}
-        keyExtractor={(item) => item.$id}
+        keyExtractor={(item) => item.id.toString()}
         
         renderItem={({item}) => (
                     <View >

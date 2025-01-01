@@ -1,9 +1,13 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import StoreImage from '../assets/images/tabs/mall/res/bustling/front.jpg'
-import { router } from 'expo-router'
+import { router } from 'expo-router';
 
-const SmallStoreCard = ({promo, closed, icon, name, openT, closeT}) => {
+export interface SmallStoreCardProps{
+  promo?: string, closed: boolean, icon: string, name: string, openT: String, closeT: String
+}
+
+const SmallStoreCard: React.FC<SmallStoreCardProps> = ({promo, closed, icon, name, openT, closeT}) => {
   return (
     <TouchableOpacity className='my-2 mx-4 p-3 ' activeOpacity={0.8} onPress={() => router.push('/')}>
       <View className='bg-notwhite w-[227] h-[160] rounded-[10px] overflow-hidden'>

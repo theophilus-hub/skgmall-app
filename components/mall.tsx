@@ -1,14 +1,18 @@
 import { View, Text, Image, TouchableOpacity, FlatList } from 'react-native'
 import NextArrow from '../assets/images/tabs/mall/next.png'
-import StoreSideScroll from './storeSideScroll'
+import StoreSideScroll from './storeSideScroll';
 
+export interface MallProps{
+    data: { id: number, storeCat: string, promo?: string, closed: boolean, icon: string, name: string, openT: String, closeT: String }[],
+    catData: { id: number, uid: string, name: string }[]
+}
 
-const Mall = ({data, catData}) => {
+const Mall: React.FC<MallProps> = ({data, catData}) => {
   return (
     <View>
-      <FlatList className=' text-black ' 
+      <FlatList className='text-black' 
         data = {catData}
-        keyExtractor={(item) => item.$id}
+        keyExtractor={(item) => item.id.toString()}
         
         renderItem={({item}) => (
         <View className='my-2' key={item.id}>

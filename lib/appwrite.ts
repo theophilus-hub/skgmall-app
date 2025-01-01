@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Client, Account, ID, Databases} from 'react-native-appwrite';
 
 export const config = {
@@ -23,7 +22,7 @@ const account = new Account(client);
 const db = new Databases(client);
 
 
-export default async function createUser  (email, password, username){
+export default async function createUser  (email: string, password: string, username: string){
     try{
         console.log('creating account')
         const newAccount = await account.create(
@@ -55,15 +54,13 @@ export default async function createUser  (email, password, username){
 
     }catch(error){
         console.log(error);
-        throw new Error(error)
+        throw error;
     }
 
    
 }
 
-
-
-export async function signIn(email, password) {
+export async function signIn(email: string, password: string) {
     try {
         console.log('deleting session')
         const dele = await account.deleteSessions();
@@ -74,15 +71,14 @@ export async function signIn(email, password) {
             console.log(' session created')
         return session;}
     } catch (error) {
-      throw new Error(error)  
+      throw error;  
     }
 }
-
 
 export async function listSession() {
     const sessions = account.getSession('current')
     console.log((await sessions).$id)
     console.log((await sessions).provider);
-console.log((await sessions).providerUid);
-console.log((await sessions).providerAccessToken);
+    console.log((await sessions).providerUid);
+    console.log((await sessions).providerAccessToken);
 }

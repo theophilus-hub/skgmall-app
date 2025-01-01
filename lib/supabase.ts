@@ -29,21 +29,18 @@ AppState.addEventListener('change', (state) => {
 })
 
 
-export async function signUpWithEmail(email, password) {
-    
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({email: email, password: password })
+export async function signUpWithEmail(email: string, password: string) {
+    const { data: { session }, error } = await supabase.auth.signUp({email: email, password: password })
 
-      if (error) {
-        throw new Error(error)       
-      }
-  
-  }
+    if(error) {
+        throw error;       
+    }
+
+    return session;
+}
 
 
-export async function signInWithEmail(email, password) {
+export async function signInWithEmail(email: string, password: string) {
   
     const { error } = await supabase.auth.signInWithPassword({
         email: email,
@@ -55,7 +52,7 @@ export async function signInWithEmail(email, password) {
     }
 
 
-export async function updateUserProfile(id, firstName, lastName, phoneNumber) {
+export async function updateUserProfile(id: string, firstName: string, lastName: string, phoneNumber: string) {
 
   const { error } = await supabase
   .from('profiles')
@@ -68,37 +65,28 @@ export async function updateUserProfile(id, firstName, lastName, phoneNumber) {
 }
 
 export async function clientSession() {
-  const { data, error } = await supabase.auth.getSession()
+  const { data: { session }, error } = await supabase.auth.getSession()
 
   console.log(error)
 
   if (error) {
-    throw new Error(error)
+    throw error
   }
 
+  return session;
 }
-
-
 
 export async function getUser() {
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser();
+
+  return user;
 }
 
-
 export async function getData(){
-    
-  const { data, error } = await supabase
-  .from('categories')
-  .select()
-
-  
+  const { data, error } = await supabase.from('categories').select()
   if(error){
-    throw new Error(error);
+    throw error;
   }else{
-   return(
-    {data}
-   )
+   return({ data })
   }
-
-
 }

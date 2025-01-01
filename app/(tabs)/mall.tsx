@@ -35,12 +35,11 @@ const Mall = () => {
 
   return (
     <SafeAreaView className="bg-white h-full">
-      <FlatList
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        ListHeaderComponent={() => (
-          <View className="">
+      <ScrollView
+            refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }>
+            <View className="">
             <View className="my-4 mx-6 flex flex-row items-center justify-between">
               <Text className="font-inter font-semibold text-black text-sm">
                 Hi Theophilus Tarri, {"\n"}Where will you order from today?
@@ -50,7 +49,7 @@ const Mall = () => {
               </TouchableOpacity>
             </View>
             <View className="mx-6">
-              <Search />
+              <Search value={""} />
             </View>
             <View className="my-2 ml-6">
               <Text className="font-inter font-bold text-black text-base mb-2">
@@ -62,8 +61,7 @@ const Mall = () => {
             </View>
             <MainMall data={data} catData={storeCat} />
           </View>
-        )}
-      />
+        </ScrollView>
     </SafeAreaView>
   );
 };

@@ -1,11 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native'
-import {Slot, SplashScreen, Stack, useSegments, router} from 'expo-router';
+import {SplashScreen, Stack} from 'expo-router';
 import {useFonts} from 'expo-font'
-import { useEffect, useState } from 'react';
-import supabase from '@supabase/supabase-js';
-import {getUser, clientSession} from '../lib/supabase'
+import { useEffect } from 'react';
 
-import GlobalProvider from '../context/GlobalProvider'
+import GlobalProvider from '../context/GlobalProvider';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -34,12 +31,7 @@ const RootLayout = () => {
             <Stack.Screen name='(tabs)' options={{headerShown: false}} />
       </Stack> 
     </GlobalProvider>
-  )
-
-
-
-
- 
+  );
 }
 
 export default RootLayout

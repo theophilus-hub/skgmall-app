@@ -23,7 +23,7 @@ const Profile = () => {
   const submit = async () => {
     const userJson = await supabase.auth.getUser()
     const user = userJson.data.user;
-    const userId = user.id;
+    const userId = user!.id;
 
     try {
         const result = await updateUserProfile(
@@ -53,20 +53,20 @@ const Profile = () => {
                     placeholder='First Name'
                     value={form.firstName}
                     handeChangeText={(e) => setForm({...form, firstName: e})}
-                    KeyboardType='first-name'
+                    inputType='first-name'
                 />
 
                 <FormField 
                     placeholder='Last Name'
                     value={form.lastName}
                     handeChangeText={(e) => setForm({...form, lastName: e})}
-                    KeyboardType='first-name'
+                    inputType='first-name'
                 />
                 <FormField 
                     placeholder='Phone Number'
                     value={form.phoneNumber}
                     handeChangeText={(e) => setForm({...form, phoneNumber: e.replace(/[^0-9]/g, '')})}
-                    keyboardType='numeric'
+                    inputType='numeric'
                 />
             </View>
             <View className='mt-4'>
