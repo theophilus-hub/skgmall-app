@@ -7,46 +7,60 @@ import WideButton from '../../components/wideButton';
 import Eye from '../../assets/images/auth/eye-slash.png';
 import Google from '../../assets/images/auth/google logo.png';
 import Apple from '../../assets/images/auth/apple logo.png';
-import { getUser, supabase } from '../../lib/supabase';
-import { signInWithEmail } from '../../lib/supabase';
+import createUser from '../../lib/appwrite'
+import {signUpWithEmail, signInWithEmail} from '../../lib/supabase'
+import 'react-native-url-polyfill/auto'
 import { useGlobalContext } from '../../context/GlobalProvider';
-
-const SignIn = () => {
-
+const Signup = () => {
+ 
   const [form, setForm] = useState({
     email: '',
-    password: ''
+    password: '',
+    cpassword: ''
   })
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const {setUser, setIsLoggedIn} = useGlobalContext()
 
+  
+
   const submit =  async () => {
-    
     if (!form.email || !form.password) {
       Alert.alert('notice', 'wrong input')
       
-    }else{
-        try {
-          
-          await signInWithEmail(form.email, form.password)
-          const result = await getUser();
-          setUser(result);
-          setIsLoggedIn(true)
-          router.replace('/(tabs)/mall')
+    }
+    setIsSubmitting(true)
 
-        } catch (error) {
-          Alert.alert('Error', 'wrong credentials')
-        } 
+    try {
+      const result = await signUpWithEmail(form.email, form.password);
+      if(result){
+        setUser(result.user);
+        setIsLoggedIn(true);
+        router.replace('/profile')
+      }else{
+        Alert.alert('Error', 'User signup failed')
+      }
+    } catch (error) {
+
+      //console.log( error)
+      if ((error as Error).message === 'AuthApiError: User already registered') {
+        Alert.alert('Error', 'User Already Exist')
+      } else {
+        Alert.alert('Error', (error as Error).message)
+      }
+      
+      
+    } finally{
+      setIsSubmitting(false)
     }
     
   }
-
 
   return (
     <SafeAreaView className='bg-white h-full'>
       <ScrollView>
         <View className='justify-center items-center w-full  px-4 mt-16'>
-          <Text className='font-bold font-inter text-center text-base'>Welcome to SKG Mall {'\n'}Sign In</Text>
+          <Text className='font-bold font-inter text-center text-base'>Welcome to SKG Mall {'\n'}Sign Up</Text>
          
           <View className='mt-16'>
             <View>
@@ -54,23 +68,31 @@ const SignIn = () => {
                 placeholder='Email or phone number'
                 value={form.email}
                 handeChangeText={(e) => setForm({...form, email: e})}
-                KeyboardType='email-address'
+                inputType='email'
               />
               <FormField 
-                placeholder='Password'
+                placeholder='Create Password'
                 value={form.password}
                 handeChangeText={(e) => setForm({...form, password: e})}
                 inputType= 'Password'
               />
+               <FormField 
+                placeholder='Confirm Password'
+                value={form.cpassword}
+                handeChangeText={(e) => setForm({...form, cpassword: e})}
+                inputType= 'Password'
+              />
             </View>
-            <View className='mt-4'>
+            <View className='mt-2'>
               <WideButton 
-              onPress={submit}
-                text='Sign In'
+                onPress={submit}
+                text='Sign Up'
                 bg='primary'
                 color='white'
                 style="font-semibold font-inter text-sm  text-center justify-center"
+                // isLoading = {isSubmitting}
                 />
+
             </View>
             
           </View>
@@ -84,39 +106,33 @@ const SignIn = () => {
 
         <View className='justify-center items-center w-full  px-4 '>
           <View>
-            <TouchableOpacity activeOpacity={0.6} className='flex flex-row space-x-3 justify-center items-center bg-white border border-slate-400 my-2 py-3 px-4 w-[338px] rounded-[10px]'>
+            <TouchableOpacity activeOpacity={0.6} className='flex flex-row space-x-3 justify-center items-center bg-white border border-gray my-2 py-3 px-4 w-[338px] rounded-[10px]'>
               <Image 
                 source={Google} 
                 />
 
-              <Text>Sign in with Google</Text>
+              <Text>Sign up with Google</Text>
 
             </TouchableOpacity>
 
-            <TouchableOpacity activeOpacity={0.6} className='flex flex-row space-x-3 justify-center items-center bg-white border border-slate-400 my-2 py-3 px-4 w-[338px] rounded-[10px]'>
+            <TouchableOpacity activeOpacity={0.6} className='flex flex-row space-x-3 justify-center items-center bg-white border border-gray my-2 py-3 px-4 w-[338px] rounded-[10px]'>
               <Image 
                 source={Apple}
               />
-              <Text>Sign in with Apple ID</Text>
+              <Text>Sign up with Apple ID</Text>
             </TouchableOpacity>
           </View>
 
           <View className='flex flex-row justify-center items-center p-4'>
-            <Text className='text-sm font inter font-semibold'>Don’t have an account?</Text>
-            <TouchableOpacity onPress={() => router.push('/signup')} activeOpacity={0.4} className=' ml-4 '>
-              <Text className='font-semibold font-inter text-base text-primary'>Sign up</Text>
+            <Text className='text-sm font inter font-semibold'>Already have an account?</Text>
+            <TouchableOpacity onPress={() => router.push('/signin')} activeOpacity={0.4} className=' ml-4 '>
+              <Text className='font-semibold font-inter text-base text-primary'>Sign in</Text>
             </TouchableOpacity>
           </View>
 
-          <View className='mt-6'>
-              <WideButton 
-                text='Just Order'
-                bg='primary'
-                color='white'
-                style="font-semibold font-inter text-sm  text-center justify-center"
-                />
-            </View>
-          
+          <View className='mt-4'>
+              <Text className='font-normal font-inter text-sm text-center'>By clicking Sign up, you agree to the <Text className='text-secondary'>terms & conditions</Text> and <Text className='text-secondary'>privacy policy</Text>.</Text>
+          </View>
         </View>
 
       </ScrollView>
@@ -124,4 +140,4 @@ const SignIn = () => {
   )
 }
 
-export default SignIn
+export default Signup

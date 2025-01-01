@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { ScrollView, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, Image, TouchableOpacity, ImageSourcePropType } from 'react-native';
 import { Link, router, Redirect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Onb1 from '../assets/images/onb/boy eating illustration.png';
@@ -12,7 +12,7 @@ export interface OnbProps{
         id: number;
         header: string;
         des: string;
-        image: string;
+        image: ImageSourcePropType;
         size: string;
     }
 }
@@ -25,7 +25,7 @@ const Onb: React.FC<OnbProps> = ({item}) => {
      
 
         <Text className='text-inter text-black text-base font-bold pb-12'>{item.header}</Text>
-        <Image source={require(item.image)}
+        <Image source={item.image}
           className = {item.size}
         />
       </View>

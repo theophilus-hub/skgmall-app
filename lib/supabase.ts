@@ -52,7 +52,7 @@ export async function signInWithEmail(email: string, password: string) {
     }
 
 
-export async function updateUserProfile(id: string, firstName: string, lastName: number, phoneNumber: number) {
+export async function updateUserProfile(id: string, firstName: string, lastName: string, phoneNumber: string) {
 
   const { error } = await supabase
   .from('profiles')
@@ -76,29 +76,17 @@ export async function clientSession() {
   return session;
 }
 
-
-
 export async function getUser() {
   const { data: { user } } = await supabase.auth.getUser();
 
   return user;
 }
 
-
 export async function getData(){
-    
-  const { data, error } = await supabase
-  .from('categories')
-  .select()
-
-  
+  const { data, error } = await supabase.from('categories').select()
   if(error){
     throw error;
   }else{
-   return(
-    {data}
-   )
+   return({ data })
   }
-
-
 }

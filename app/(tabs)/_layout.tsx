@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, ImageSourcePropType } from "react-native";
 import { Tabs, router } from "expo-router";
 import { useFonts } from "expo-font";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import SplashScreen from "../../components/splashScreen";
 
 import home from "../../assets/images/tabs/home.png";
@@ -31,7 +31,11 @@ const TabsLayout = () => {
     Inter: require("../../assets/fonts/Inter Regular.ttf"),
   });
 
-  const TabIcon = ({ icon, name, focused }) => {
+  interface TabIconProps{
+    icon: ImageSourcePropType, name: string, focused: boolean
+  }
+
+  const TabIcon: React.FC<TabIconProps> = ({ icon, name, focused }) => {
     return (
       <View className="items-center justify-center mt-2">
         <Image source={icon} tintColor={focused ? "#EA0001" : "#606060"} />

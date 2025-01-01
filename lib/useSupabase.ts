@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-const useSupabase = (fn: () => Promise<any[]> ) => {
-  const [data, setData] = useState<any[]>([]);
+const useSupabase = (fn: () => Promise<{ data: any[] }> ) => {
+  const [data, setData] = useState<{ data: any[] }>({ data: [] });
   const [isLoading, setIsLoading] = useState(true)
 
   const fetchData = async() => {

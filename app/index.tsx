@@ -115,10 +115,10 @@ a hassle-free dining experience every time.</Text>
     <FlatList
       data={onbData}
       keyExtractor={(item) => item.id.toString()}
-      renderItem={(item) => {
+      renderItem={({item, index, separators}) => {
         //
         return(
-          <Onb item={item.item} />
+          <Onb item={item} />
         )
         
       }}

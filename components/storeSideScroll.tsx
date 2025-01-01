@@ -6,20 +6,20 @@ import StoreImage4 from '../assets/images/tabs/mall/res/blazers/front.jpg'
 import SmallStoreCard from './smallStoreCard'
 
 export interface StoreSideScrollProps{
-  data: { id: number, storeCat: number, promo: string, closed: string, icon: string, name: string, openT: String, closeT: String }[],
-  cat: number
+  data: { id: number, storeCat: string, promo?: string, closed: boolean, icon: string, name: string, openT: String, closeT: String }[],
+  cat: string
 }
 
 const StoreSideScroll: React.FC<StoreSideScrollProps> = ({data, cat}) => {
     return (
         <View>
             <FlatList className='text-black' 
-                data = {data.filter((item)=> item.storeCat == cat)}
+                data = {data.filter((item)=> item.storeCat === cat)}
                 keyExtractor={(item) => item.id.toString()}
                 
                 renderItem={({item}) => (
                         <View key={item.id}>
-                            <SmallStoreCard closed={item.closed} icon={item.icon} name={item.name} openT={item.openT} closeT={item.closeT} promo={''}/>
+                            <SmallStoreCard closed={item.closed} icon={item.icon} name={item.name} openT={item.openT} closeT={item.closeT} promo={item.promo}/>
                         </View>
                 )}
                 horizontal

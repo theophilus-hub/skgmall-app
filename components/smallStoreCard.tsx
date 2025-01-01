@@ -4,7 +4,7 @@ import StoreImage from '../assets/images/tabs/mall/res/bustling/front.jpg'
 import { router } from 'expo-router';
 
 export interface SmallStoreCardProps{
-  promo: string, closed: string, icon: string, name: string, openT: String, closeT: String
+  promo?: string, closed: boolean, icon: string, name: string, openT: String, closeT: String
 }
 
 const SmallStoreCard: React.FC<SmallStoreCardProps> = ({promo, closed, icon, name, openT, closeT}) => {
