@@ -14,16 +14,9 @@ import Onb1 from "../assets/images/onb/boy eating illustration.png";
 import Onb2 from "../assets/images/onb/hamburger illustration.png";
 import Onb3 from "../assets/images/onb/order food illustration.png";
 import WideButton from "./wideButton";
+import { OnbDataType } from "lib/onbData";
 
-export interface OnbProps {
-  item: {
-    id: number;
-    header: string;
-    des: string;
-    image: ImageSourcePropType;
-    size: string;
-  };
-}
+export interface OnbProps { item: OnbDataType }
 
 const Onb: React.FC<OnbProps> = ({ item }) => {
   return (

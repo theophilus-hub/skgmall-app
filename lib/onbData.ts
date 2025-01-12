@@ -1,6 +1,13 @@
+export type OnbDataType = {
+    id: number;
+    header: string;
+    des: string;
+    image: any;
+    size: string;
+};
 
-export const onbData = [
-    
+
+export const onbData: OnbDataType[] = [
     {
         id: 1,
         header: 'Welcome to SKG Mall!',

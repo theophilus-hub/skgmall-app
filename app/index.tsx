@@ -9,7 +9,7 @@ import WideButton from '../components/wideButton';
 import 'react-native-url-polyfill/auto'
 import { useGlobalContext } from '../context/GlobalProvider';
 import Onb, { OnbProps } from '../components/onb';
-import { onbData } from '../lib/onbData';
+import { onbData, OnbDataType } from '../lib/onbData';
 import React, { useRef, useState, useEffect } from 'react';
 
 export default function App() {
@@ -19,7 +19,7 @@ export default function App() {
   if(!isLoading && isLoggedIn ) return <Redirect href='/mall' />
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const flatListRef = useRef<FlatList<OnbProps[]>|null>(null);
+  const flatListRef = useRef<FlatList<OnbDataType>|null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -138,22 +138,16 @@ a hassle-free dining experience every time.</Text>
 
 
     <FlatList
-     ref={flatListRef}
-      data={onbData}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({item, index, separators}) => {
-        //
-        return(
-          <Onb item={item} />
-        )
-        
-      }}
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      pagingEnabled
-      bounces={true}
-      onMomentumScrollEnd={handleScrollEnd}
-      ListEmptyComponent={() => (
+        ref={flatListRef}
+        data={onbData}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({item, index, separators}) => <Onb item={item} /> }
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        pagingEnabled
+        bounces={true}
+        onMomentumScrollEnd={handleScrollEnd}
+        ListEmptyComponent={() => (
         <>
          
         </>
