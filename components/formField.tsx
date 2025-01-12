@@ -12,13 +12,16 @@ export interface FormFieldProps{
 const FormField: React.FC<FormFieldProps>  = ({placeholder, value, handeChangeText, inputType }) => {
   const [showPassword, setShowPassword] = useState(false)
   return (
-    <View className='flex flex-row bg-notwhite w-[343px] h-[49]  rounded-[10px]  px-8 my-2 justify-start content-center items-center focus:border focus:border-slate-300 '>
+    <View className='flex flex-row bg-notwhite w-[343px] h-[48]  rounded-[10px]  px-8 my-2 justify-start content-center items-center focus:border-2 focus:border-slate-300 '>
+      
+      
       <TextInput
-        className=' text-black opacity-80 font-inter font-medium text-sm w-full h-8  '
+        className=' text-black opacity-80 font-inter font-medium text-sm w-full h-8 pb-1 '
         placeholder={placeholder}
         placeholderTextColor='#2D2D2DCC'
         onChangeText={handeChangeText}
         secureTextEntry = {inputType === 'Password' && !showPassword}
+        keyboardType={inputType === "numeric"? 'numeric' : inputType === "email"? 'email-address' :'default'}
       />
 
       {inputType === "Password" &&(

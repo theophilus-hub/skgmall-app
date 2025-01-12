@@ -7,6 +7,7 @@ import WideButton from '../../components/wideButton';
 import Eye from '../../assets/images/auth/eye-slash.png';
 import Google from '../../assets/images/auth/google logo.png';
 import Apple from '../../assets/images/auth/apple logo.png';
+import SKG from '../../assets/SKG.png'
 import { getUser, supabase } from '../../lib/supabase';
 import { signInWithEmail } from '../../lib/supabase';
 import { useGlobalContext } from '../../context/GlobalProvider';
@@ -17,7 +18,7 @@ const SignIn = () => {
     email: '',
     password: ''
   })
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const {setUser, setIsLoggedIn} = useGlobalContext()
 
   const submit =  async () => {
@@ -26,10 +27,11 @@ const SignIn = () => {
       Alert.alert('notice', 'wrong input')
       
     }else{
+      setIsSubmitting(true)
         try {
           
-          await signInWithEmail(form.email, form.password)
-          const result = await getUser();
+          const result = await signInWithEmail(form.email, form.password)
+         
           if(result){
             setUser(result);
             setIsLoggedIn(true)
@@ -40,7 +42,9 @@ const SignIn = () => {
 
         } catch (error) {
           Alert.alert('Error', 'wrong credentials')
-        } 
+        } finally{
+          setIsSubmitting(false)
+        }
     }
     
   }
@@ -50,6 +54,10 @@ const SignIn = () => {
     <SafeAreaView className='bg-white h-full'>
       <ScrollView>
         <View className='justify-center items-center w-full  px-4 mt-16'>
+        <Image 
+          className='w-10 h-8'
+                source={SKG}
+              />
           <Text className='font-bold font-inter text-center text-base'>Welcome to SKG Mall {'\n'}Sign In</Text>
          
           <View className='mt-16'>
@@ -74,6 +82,7 @@ const SignIn = () => {
                 bg='primary'
                 color='white'
                 style="font-semibold font-inter text-sm  text-center justify-center"
+                isLoading={isSubmitting}
                 />
             </View>
             
@@ -117,7 +126,8 @@ const SignIn = () => {
                     text='Just Order'
                     bg='primary'
                     color='white'
-                    style="font-semibold font-inter text-sm  text-center justify-center" onPress={()=>{}}                />
+                    style="font-semibold font-inter text-sm  text-center justify-center" onPress={()=>{}}      
+                    isLoading={isSubmitting}          />
             </View>
           
         </View>

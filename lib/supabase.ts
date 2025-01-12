@@ -3,8 +3,8 @@ import 'react-native-url-polyfill/auto'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = "https://rfeoweuynhcrldkefooc.supabase.co"
-const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJmZW93ZXV5bmhjcmxka2Vmb29jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYwMDkzNTksImV4cCI6MjAzMTU4NTM1OX0.bOgJWyi_4Ajnk87Ve4xud77vRWBXiwF0JJVNPMZtncg"
+const supabaseUrl = "https://zguptqsyvbequmwvdtpd.supabase.co"
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpndXB0cXN5dmJlcXVtd3ZkdHBkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYxOTU4ODEsImV4cCI6MjA1MTc3MTg4MX0.ZSBAhLwopWcwTc88zTmKiBxRIdIbFoaH1zOHVyGR7Vw"
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
@@ -42,13 +42,15 @@ export async function signUpWithEmail(email: string, password: string) {
 
 export async function signInWithEmail(email: string, password: string) {
   
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data: {user}, error } = await supabase.auth.signInWithPassword({
         email: email,
         password: password,
       })
+
+      
  
       if (error != null) throw new Error('error')
-      
+      return user
     }
 
 
