@@ -135,8 +135,6 @@ a hassle-free dining experience every time.</Text>
    
 
 <SafeAreaView className='bg-primary'>
-
-
     <FlatList
         ref={flatListRef}
         data={onbData}
@@ -153,23 +151,17 @@ a hassle-free dining experience every time.</Text>
         </>
       )}
     />
-
-           
-      
-       
-
-    <View className='flex flex-row space-x-2 absolute z-[5] bottom-[10%] left-[42%] justify-center bg-primary'>
-              
-              <View className='bg-white w-6 h-3 rounded-full '></View>
-              <View className='bg-white w-3 h-3 rounded-full opacity-30'></View>
-              <View className='bg-white w-3 h-3 rounded-full opacity-30'></View>
-
-            
-            </View>
-            <TouchableOpacity  onPress={() => router.push('/signup')} activeOpacity={0.4} className='justify-center items-center mr-4 absolute bottom-[10%] right-[20px]'>
-                <Text className='font-semibold font-inter text-base text-white'>Skip</Text>
-              </TouchableOpacity>
-             
+        <View className='flex flex-row space-x-2 absolute z-[5] bottom-[10%] left-[42%] justify-center bg-primary'>      
+            <View className='bg-white w-6 h-3 rounded-full '></View>
+            <View className='bg-white w-3 h-3 rounded-full opacity-30'></View>
+            <View className='bg-white w-3 h-3 rounded-full opacity-30'></View>        
+        </View>
+        <TouchableOpacity  onPress={() => router.push('/signin')} activeOpacity={0.4} className='justify-center items-center mr-4 absolute bottom-[10%] right-[20px]'>
+            <Text className='font-semibold font-inter text-base text-white'>Skip</Text>
+        </TouchableOpacity>
+        <TouchableOpacity  onPress={() => router.push('/store/2')} activeOpacity={0.4} className='justify-center items-center mr-4 absolute bottom-[10%] left-[20px]'>
+            <Text className='font-semibold font-inter text-base text-white'>Store</Text>
+        </TouchableOpacity>
     </SafeAreaView>
     
   </>
@@ -177,6 +169,14 @@ a hassle-free dining experience every time.</Text>
   );
 }
 
-
-
+const style = StyleSheet.create({
+    fake:{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        width: 200,
+        backgroundColor: "white"
+    }
+});
 

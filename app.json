@@ -33,9 +33,6 @@
     "extra": {
       "router": {
         "origin": false
-      },
-      "eas": {
-        "projectId": "4edf8333-e757-4252-bac0-d2204308ecec"
       }
     },
     "owner": "tarri9192"
