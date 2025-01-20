@@ -11,54 +11,35 @@ import SKG from '../../assets/SKG.png'
 import { getUser, supabase } from '../../lib/supabase';
 import { signInWithEmail } from '../../lib/supabase';
 import { useGlobalContext } from '../../context/GlobalProvider';
+import { useSettings } from 'context/settingsContext';
+import { Credentials } from 'context/models';
 
 const SignIn = () => {
-
-  const [form, setForm] = useState({
-    email: '',
-    password: ''
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const {setUser, setIsLoggedIn} = useGlobalContext()
-
-  const submit =  async () => {
+    const [form, setForm] = useState<Credentials>({ email: '', password: ''});
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { login } = useGlobalContext();
+    const { setCredentials } = useSettings();
     
-    if (!form.email || !form.password) {
-      Alert.alert('notice', 'wrong input')
-      
-    }else{
-      setIsSubmitting(true)
-        try {
-          
-          const result = await signInWithEmail(form.email, form.password)
-         
-          if(result){
-            setUser(result);
-            setIsLoggedIn(true)
-            router.replace('/(tabs)/mall')
-          }else{
-            Alert.alert('Error', 'wrong credentials')
-          }
-
-        } catch (error) {
-          Alert.alert('Error', 'wrong credentials')
-        } finally{
-          setIsSubmitting(false)
+    const submit = () => {
+        if (!form.email || !form.password) {
+            Alert.alert('notice', 'wrong input')
+        }else{
+            setIsSubmitting(true);
+            login({ email: form.email, password: form.password }).then(()=>{
+                setCredentials({ email: form.email, password: form.password });
+                router.replace('/(tabs)/mall');
+            }).catch((error)=>{
+                Alert.alert('Error', 'wrong credentials')
+            }).finally(()=> setIsSubmitting(false));
         }
     }
     
-  }
-
-
-  return (
-    <SafeAreaView className='bg-white h-full'>
-      <ScrollView>
-        <View className='justify-center items-center w-full  px-4 mt-16'>
-        <Image 
-          className='w-10 h-8'
-                source={SKG}
-              />
-          <Text className='font-bold font-inter text-center text-base'>Welcome to SKG Mall {'\n'}Sign In</Text>
+    return (
+        <SafeAreaView className='bg-white h-full'>
+            <ScrollView>
+                <View className='justify-center items-center w-full  px-4 mt-16'>
+                    <Image className='w-10 h-8' source={SKG} />
+                    <Text className='font-bold font-inter text-center text-base'>Welcome to SKG Mall {'\n'}Sign In</Text>
          
           <View className='mt-16'>
             <View>
@@ -98,25 +79,19 @@ const SignIn = () => {
         <View className='justify-center items-center w-full  px-4 '>
           <View>
             <TouchableOpacity activeOpacity={0.6} className='flex flex-row space-x-3 justify-center items-center bg-white border border-slate-400 my-2 py-3 px-4 w-[338px] rounded-[10px]'>
-              <Image 
-                source={Google} 
-                />
-
+              <Image source={Google} />
               <Text>Sign in with Google</Text>
-
             </TouchableOpacity>
 
             <TouchableOpacity activeOpacity={0.6} className='flex flex-row space-x-3 justify-center items-center bg-white border border-slate-400 my-2 py-3 px-4 w-[338px] rounded-[10px]'>
-              <Image 
-                source={Apple}
-              />
+              <Image source={Apple} />
               <Text>Sign in with Apple ID</Text>
             </TouchableOpacity>
           </View>
 
           <View className='flex flex-row justify-center items-center p-4'>
             <Text className='text-sm font inter font-semibold'>Don’t have an account?</Text>
-            <TouchableOpacity onPress={() => router.push('/signup')} activeOpacity={0.4} className=' ml-4 '>
+            <TouchableOpacity onPress={() => router.replace('/signup')} activeOpacity={0.4} className=' ml-4 '>
               <Text className='font-semibold font-inter text-base text-primary'>Sign up</Text>
             </TouchableOpacity>
           </View>
