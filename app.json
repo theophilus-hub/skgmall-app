@@ -29,6 +29,12 @@
     "plugins": [
       "expo-router",
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      }
+    },
+    "owner": "tarri9192"
   }
 }

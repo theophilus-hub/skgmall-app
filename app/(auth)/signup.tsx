@@ -7,21 +7,26 @@ import WideButton from '../../components/wideButton';
 import Eye from '../../assets/images/auth/eye-slash.png';
 import Google from '../../assets/images/auth/google logo.png';
 import Apple from '../../assets/images/auth/apple logo.png';
-import createUser from '../../lib/appwrite'
-import {signUpWithEmail, signInWithEmail} from '../../lib/supabase'
+import SKG from '../../assets/SKG.png'
+import {signUpWithEmail, signInWithEmail, supabase} from '../../lib/supabase'
 import 'react-native-url-polyfill/auto'
 import { useGlobalContext } from '../../context/GlobalProvider';
 const Signup = () => {
  
   const [form, setForm] = useState({
     email: '',
+    firstName: '',
+    lastName: '',
+    phone: '',
+    state: '',
+    location: '',
     password: '',
     cpassword: ''
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {setUser, setIsLoggedIn} = useGlobalContext()
-
+  const [stateError, setStateError] = useState('');
   
 
   const submit =  async () => {
@@ -32,11 +37,35 @@ const Signup = () => {
     setIsSubmitting(true)
 
     try {
-      const result = await signUpWithEmail(form.email, form.password);
-      if(result){
-        setUser(result.user);
+     
+      const { data, error } = await supabase.auth.signUp({
+        email: form.email,
+        password: form.password,
+        options: {
+          data: {
+            email: form.email,
+            firstname: form.firstName,
+            lastname: form.lastName,
+            phone: form.phone,
+            state: 'Bayelsa',
+            location: 'Otuoke'
+          },
+        },
+      });
+
+      if (error) {
+      
+        setStateError(error.message);
+      } else {
+      }
+      if (data != null) {
+        const newUser = data.user;
+        if(newUser){
+           setUser(newUser)
         setIsLoggedIn(true);
-        router.replace('/profile')
+        router.replace('/mall')
+        }
+       
       }else{
         Alert.alert('Error', 'User signup failed')
       }
@@ -60,16 +89,40 @@ const Signup = () => {
     <SafeAreaView className='bg-white h-full'>
       <ScrollView>
         <View className='justify-center items-center w-full  px-4 mt-16'>
+        <Image 
+          className='w-10 h-8'
+                source={SKG}
+              />
           <Text className='font-bold font-inter text-center text-base'>Welcome to SKG Mall {'\n'}Sign Up</Text>
          
           <View className='mt-16'>
             <View>
               <FormField 
-                placeholder='Email or phone number'
+                placeholder='Email'
                 value={form.email}
                 handeChangeText={(e) => setForm({...form, email: e})}
                 inputType='email'
               />
+              <FormField 
+                placeholder='First Name'
+                value={form.firstName}
+                handeChangeText={(e) => setForm({...form, firstName: e})}
+                inputType='text'
+              />
+              <FormField 
+                placeholder='Last Name'
+                value={form.lastName}
+                handeChangeText={(e) => setForm({...form, lastName: e})}
+                inputType='text'
+              />
+              <FormField 
+                placeholder='Phone Number'
+                value={form.phone}
+                handeChangeText={(e) => setForm({...form, phone: e.replace(/[^0-9]/g, '')})}
+                inputType='numeric'
+              />
+              
+               
               <FormField 
                 placeholder='Create Password'
                 value={form.password}
@@ -83,6 +136,9 @@ const Signup = () => {
                 inputType= 'Password'
               />
             </View>
+            <View>
+              <Text>{stateError}</Text>
+            </View>
             <View className='mt-2'>
               <WideButton 
                 onPress={submit}
@@ -90,7 +146,7 @@ const Signup = () => {
                 bg='primary'
                 color='white'
                 style="font-semibold font-inter text-sm  text-center justify-center"
-                // isLoading = {isSubmitting}
+                isLoading = {isSubmitting}
                 />
 
             </View>

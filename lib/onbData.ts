@@ -1,4 +1,13 @@
-export const onbData = [
+export type OnbDataType = {
+    id: number;
+    header: string;
+    des: string;
+    image: any;
+    size: string;
+};
+
+
+export const onbData: OnbDataType[] = [
     {
         id: 1,
         header: 'Welcome to SKG Mall!',
@@ -8,7 +17,7 @@ export const onbData = [
     },
     {
         id: 2,
-        header: 'Your Favorite Eateries, All in One Place.',
+        header: 'Your Favorite Eateries,\n All in One Place.',
         des: 'Delve into a diverse selection of culinary delights \n from top-rated restaurants.',
         image: require('../assets/images/onb/hamburger illustration.png'),
         size: 'h-[250px] w-[297.4px]'
