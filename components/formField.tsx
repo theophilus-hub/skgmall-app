@@ -1,5 +1,5 @@
 import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import eye from '../assets/images/auth/eye.png';
 import eyeSlash from '../assets/images/auth/eye-slash.png';
 
@@ -7,14 +7,16 @@ export interface FormFieldProps{
     placeholder?: string, value: string, 
     handeChangeText?: (text: string) => void,
     inputType?: String
+    isvalid?: boolean
 }
 
-const FormField: React.FC<FormFieldProps>  = ({placeholder, value, handeChangeText, inputType }) => {
-  const [showPassword, setShowPassword] = useState(false)
+const FormField: React.FC<FormFieldProps>  = ({placeholder, value, handeChangeText, inputType, isvalid = true }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  //const borderColor = isvalid ? undefined : "red";
+
   return (
-    <View className='flex flex-row bg-notwhite w-[343px] h-[48]  rounded-[10px]  px-8 my-2 justify-start content-center items-center focus:border-2 focus:border-slate-300 '>
-      
-      
+    <View className={'flex flex-row bg-notwhite w-[343px] h-[48] rounded-[10px] px-8 my-2 justify-start content-center items-center ' + (isvalid ? "focus:border-slate-300 focus:border-2" : "border-red-300 border-2")}>
       <TextInput
         className=' text-black opacity-80 font-inter font-medium text-sm w-full h-8 pb-1 '
         placeholder={placeholder}

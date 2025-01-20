@@ -8,9 +8,7 @@ interface AuthState{
     user?: User
 }
 
-export type AuthContextType = {
-    isAuthenticated: boolean
-    user?: User
+export interface AuthContextType extends AuthState {
     signIn: (email: string, password: string) => Promise<void>,
     signUp: (email: string, password: string) => Promise<void>,
     logout: () => Promise<void>
