@@ -30,14 +30,13 @@ const FormSelect: React.FC<FormSelectProps> = ({
   };
 
   return (
-    <View className="flex-col items-start justify-start w-full border">
-      <View
-        className={`${
-          valid ? "border-gray-300" : "border-red-500"
-        } bg-gray-100 rounded-lg  h-12 w-[343px] justify-center overflow-hidden`}
-      >
-        <ScrollView>
-          <Picker
+        <View className="items-start justify-center gap-[10px]">
+            <View
+                className={`${
+                valid ? "focus:border-slate-300" : "border-red-500 border border-2"
+                } rounded-[10px] focus:border focus:border-2 bg-notwhite w-full bg-gray-100 rounded-lg  h-12 w-[343px] justify-center overflow-hidden`}
+            >
+          <Picker style={{ width: "100%" }}
             selectedValue={selectedValue}
             onValueChange={onChoose}
             // Removed fixed height to avoid offset
@@ -45,7 +44,7 @@ const FormSelect: React.FC<FormSelectProps> = ({
           >
             <Picker.Item label={placeholder || "Select an option"} value="" />
             {values.map((item) => (
-              <Picker.Item
+              <Picker.Item color="grey"
                 key={item.value}
                 label={item.label}
                 value={item.value}
@@ -53,7 +52,6 @@ const FormSelect: React.FC<FormSelectProps> = ({
               />
             ))}
           </Picker>
-        </ScrollView>
       </View>
       {!valid && (
         <View className="flex-row items-center mt-1 gap-1">

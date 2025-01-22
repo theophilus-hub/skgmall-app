@@ -162,7 +162,7 @@ const Signup = () => {
                 <View className='min-h-[1px] h-[1px] min-w-[168px] bg-black opacity-60 mr-0'></View>
             </View>
           <View>
-            <View style={{ gap: 10 }}>
+            <View style={{ gap: 20 }}>
               <SignUpForm 
                 placeholder='Email'
                 value={form.email.value}
