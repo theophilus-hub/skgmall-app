@@ -26,7 +26,7 @@ const Signup = () => {
         phone: { value: "", valid: true, error: "You must input a valid phone number" },
         state: { value: "", valid: true, error: "You must specify a State of origin" },
         location: { value: "", valid: true, error: "You must specify your current location" },
-        password: { value: "", valid: true, error: "Password must contain one symbol, number and capital letter" },
+        password: { value: "", valid: true, error: "Password must contain one symbol, number\n and capital letter" },
         cpassword: { value: "", valid: true, error: "Confirm password does not match the password provided" }
     });
     
@@ -127,7 +127,10 @@ const Signup = () => {
                 source={SKG}
               />
           <Text className='font-bold font-inter text-center text-base'>Welcome to SKG Mall {'\n'}Sign Up</Text>
-          <View className='mt-16'>
+
+         
+
+          <View className='mt-8'>
             <TouchableOpacity activeOpacity={0.6} className='flex flex-row space-x-3 justify-center items-center bg-white border border-gray my-2 py-3 px-4 w-[338px] rounded-[10px]'>
               <Image 
                 source={Google} 
@@ -143,7 +146,16 @@ const Signup = () => {
               />
               <Text>Sign up with Apple ID</Text>
             </TouchableOpacity>
+           <View className='justify-center items-center w-full  px-2 '>
+          <View className='flex flex-row justify-center items-center p-4'>
+            <Text className='text-sm font inter font-semibold'>Already have an account?</Text>
+            <TouchableOpacity onPress={() => router.replace('/signin')} activeOpacity={0.4} className=' ml-4 '>
+              <Text className='font-semibold font-inter text-base text-primary'>Sign in</Text>
+            </TouchableOpacity>
           </View>
+          
+        </View>
+        </View>
           <View className='flex flex-row justify-center items-center space-x-4 mx-0 my-2'>
                 <View className='min-h-[1px] h-[1px] min-w-[168px] bg-black opacity-60'></View>
                 <Text className='font-bold font-inter text-base'>OR</Text>
@@ -222,13 +234,8 @@ const Signup = () => {
 
         
 
-        <View className='justify-center items-center w-full  px-2 '>
-          <View className='flex flex-row justify-center items-center p-4'>
-            <Text className='text-sm font inter font-semibold'>Already have an account?</Text>
-            <TouchableOpacity onPress={() => router.replace('/signin')} activeOpacity={0.4} className=' ml-4 '>
-              <Text className='font-semibold font-inter text-base text-primary'>Sign in</Text>
-            </TouchableOpacity>
-          </View>
+        <View className='justify-center items-center w-full  px-2 mb-8 '>
+         
           <View className='mx-2'>
               <Text className='font-normal font-inter text-sm text-center'>By clicking Sign up, you agree to the <Text className='text-secondary'>terms & conditions</Text> and <Text className='text-secondary'>privacy policy</Text>.</Text>
           </View>
