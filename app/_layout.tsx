@@ -23,12 +23,7 @@ const RootLayout = () => {
 
     if (!fontsLoaded && !error) return null;
 
-    const statusConfig = useMemo<{ style?: "dark" | "inverted" | "auto" | "light", bgColor?: string }>(()=>{
-        if(Platform.OS === "android"){
-            return { style: "dark", bgColor: "white" };
-        }
-        return { style: undefined, bgColor: undefined };
-    }, [Platform.OS])
+    const statusConfig: { style?: "dark", bgColor?: string } = Platform.OS === "android" ? { style: "dark", bgColor: "white" } : {};
 
     return (
         <PaperProvider>
