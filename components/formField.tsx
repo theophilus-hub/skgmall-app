@@ -16,7 +16,7 @@ const FormField: React.FC<FormFieldProps>  = ({placeholder, value, handeChangeTe
   //const borderColor = isvalid ? undefined : "red";
 
   return (
-    <View className={'flex flex-row bg-notwhite w-[343px] h-[48] rounded-[10px] px-8 justify-start content-center items-center ' + (isvalid ? "focus:border-slate-300 focus:border-2" : "border-red-300 border-2")}>
+    <View className={'flex my-2 flex-row bg-notwhite w-[343px] h-[48] rounded-[10px] px-8 justify-start content-center items-center ' + (isvalid ? "focus:border-slate-300 focus:border-2" : "border-red-300 border-2")}>
       <TextInput
         className=' text-black opacity-80 font-inter font-medium text-sm w-full h-8 pb-1 '
         placeholder={placeholder}

@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, Image, Alert} from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, Alert, StyleSheet} from 'react-native';
 import { Link, router, Redirect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FormField from '../../components/formField';
@@ -17,6 +17,7 @@ import SignUpForm from 'components/signup-form';
 import validator from 'validator';
 import FormSelect from 'components/form-select';
 import { locations, states } from 'lib/utils';
+import Dropdown from "components/dropDown";
 
 const Signup = () => {
     const [form, setForm] = useState({
@@ -162,7 +163,7 @@ const Signup = () => {
                 <View className='min-h-[1px] h-[1px] min-w-[168px] bg-black opacity-60 mr-0'></View>
             </View>
           <View>
-            <View style={{ gap: 20 }}>
+            <View style={{ gap: 10 }}>
               <SignUpForm 
                 placeholder='Email'
                 value={form.email.value}
@@ -211,8 +212,21 @@ const Signup = () => {
                 handleChange={(e) => onInputChange("cpassword", e)}
                 inputType= 'Password'
               />
-              <FormSelect placeholder='Select State' handleChange={(e) => onInputChange("state", e)} valid={form.state.valid} value={ validator.isEmpty(form.state.value)? undefined : form.state.value } values={states} errorMessage='please select a state' />
+              {/* <FormSelect placeholder='Select State' handleChange={(e) => onInputChange("state", e)} valid={form.state.valid} value={ validator.isEmpty(form.state.value)? undefined : form.state.value } values={states} errorMessage='please select a state' />
               <FormSelect placeholder='Select Location' handleChange={(e) => onInputChange("location", e)} valid={form.location.valid} value={ validator.isEmpty(form.location.value)? undefined : form.location.value } values={locations(form.state.value)} errorMessage='please select a location' />
+            */}
+              <Dropdown
+        data={states}
+        onChange={(e) => onInputChange("state", e.label)}
+        placeholder="Select State"
+      />
+
+<Dropdown
+        data={locations(form.state.value)}
+        onChange={(e) => onInputChange("location", e.label)}
+        placeholder="Select Location"
+      />
+           
             </View>
             <View>
               <Text>{stateError}</Text>
@@ -245,5 +259,17 @@ const Signup = () => {
     </SafeAreaView>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#ddd",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 20,
+    gap: 10,
+  },
+});
+
 
 export default Signup

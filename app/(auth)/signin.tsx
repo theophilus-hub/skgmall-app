@@ -42,7 +42,7 @@ const SignIn = () => {
                     <Text className='font-bold font-inter text-center text-base'>Welcome to SKG Mall {'\n'}Sign In</Text>
          
           <View className='mt-16'>
-            <View>
+            <View className=''>
               <FormField 
                 placeholder='Email or phone number'
                 value={form.email}

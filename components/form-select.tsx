@@ -33,8 +33,8 @@ const FormSelect: React.FC<FormSelectProps> = ({
         <View className="items-start justify-center gap-[10px]">
             <View
                 className={`${
-                valid ? "focus:border-slate-300" : "border-red-500 border border-2"
-                } rounded-[10px] focus:border focus:border-2 bg-notwhite w-full bg-gray-100 rounded-lg  h-12 w-[343px] justify-center overflow-hidden`}
+                valid ? "focus:border-slate-300" : "border-red-500  border-2"
+                } rounded-[10px]  focus:border-2 bg-notwhite  bg-gray-100   h-12 w-[343px] justify-center overflow-hidden`}
             >
           <Picker style={{ width: "100%" }}
             selectedValue={selectedValue}
