@@ -37,6 +37,7 @@ const Signup = () => {
     const { setCredentials } = useSettings();
 
     const onInputChange = (name: string, value: string) =>{
+      convert()
         switch(name){
             case "email":
                 setForm({ ...form, email: {...form.email, value, valid: validator.isEmail(value)} });
@@ -94,6 +95,7 @@ const Signup = () => {
     }
 
     const convert = (): RegistrationDetails =>{
+      console.log(form)
         return { 
             email: form.email.value, firstname: form.firstname.value, lastname: form.lastname.value,
             phone: form.phone.value, password: form.password.value, location: form.location.value, state: form.state.value

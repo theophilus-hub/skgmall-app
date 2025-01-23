@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { getUser, signInWithEmail, supabase } from "../lib/supabase";
 import { User } from "@supabase/supabase-js";
 import { Credentials, RegistrationDetails } from "./models";
+import { locations } from "lib/utils";
 
 interface GlobalState{
     isLoading: boolean,
@@ -52,6 +53,7 @@ const GlobalProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     }
 
     const register = async(details: RegistrationDetails)=> {
+        console.log(details)
         const { data, error } = await supabase.auth.signUp({
             email: details.email,
             password: details.password,
@@ -61,7 +63,9 @@ const GlobalProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
         });
 
         if(error){
+              console.log(error)
             throw error;
+            
         }
 
         if(data.user){
