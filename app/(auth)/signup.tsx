@@ -104,7 +104,8 @@ const Signup = () => {
 
     const submit = () => {
         if (!check()) {
-            Alert.alert('notice', 'wrong input')
+            Alert.alert('notice', 'wrong input');
+            return;
         }
         setIsSubmitting(true);
 
