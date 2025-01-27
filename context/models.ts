@@ -26,3 +26,20 @@ export type RegistrationDetails = {
     state: string,
     location: string
 }
+
+export type Store =  {
+    id: number;
+    name: string;
+    openT: string;
+    closeT: string;
+    storeCat: string;
+    location: string;
+    icon: string;
+    closed: boolean;
+}
+
+export type StoreCategory = {
+    id: number;
+    name: string;
+    uid: string;
+}

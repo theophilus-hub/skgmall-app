@@ -7,6 +7,7 @@ import SettingsContextProvider from 'context/settingsContext';
 import MultiProvider from 'context/multiprovider';
 import { Provider as PaperProvider } from "react-native-paper";
 import { Platform } from 'react-native';
+import StoresContextProvider from 'context/shopsProvider';
 SplashScreen.preventAutoHideAsync();
 
 
@@ -27,8 +28,7 @@ const RootLayout = () => {
 
     return (
         <PaperProvider>
-
-            <MultiProvider providers={[GlobalProvider, SettingsContextProvider]}>
+            <MultiProvider providers={[GlobalProvider, SettingsContextProvider, StoresContextProvider]}>
                 <Stack screenOptions={{  statusBarStyle: statusConfig.style, statusBarBackgroundColor: statusConfig.bgColor }}>
                     <Stack.Screen name='index' options={{ headerShown: false }} />
                     <Stack.Screen name='welcome' options={{ headerShown: false }} />
@@ -37,7 +37,6 @@ const RootLayout = () => {
                     <Stack.Screen name='(tabs)' options={{ headerShown: false}} />
                 </Stack>
             </MultiProvider>
-
         </PaperProvider>
 
     );
