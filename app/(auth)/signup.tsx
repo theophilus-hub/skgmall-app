@@ -17,12 +17,13 @@ import SignUpForm from 'components/signup-form';
 import validator from 'validator';
 import FormSelect from 'components/form-select';
 import { locations, states } from 'lib/utils';
-import Dropdown from "components/dropDown";
+import Dropdown, { OptionItem } from "components/dropDown";
 
 type FormUnit = { value: string, valid?: boolean, error: string }
+type FormSelectionUnit = { value?: OptionItem, valid?: boolean, error: string }
 type Form = { 
-    email: FormUnit, firstname: FormUnit, lastname: FormUnit, phone: FormUnit, state: FormUnit,
-    location: FormUnit, password: FormUnit, cpassword: FormUnit
+    email: FormUnit, firstname: FormUnit, lastname: FormUnit, phone: FormUnit, state: FormSelectionUnit,
+    location: FormSelectionUnit, password: FormUnit, cpassword: FormUnit
 }
 
 const Signup = () => {
@@ -36,8 +37,8 @@ const Signup = () => {
         firstname: { value: "", error: "First name cannot be empty" },
         lastname: { value: "", error: "Last name cannot be empty" },
         phone: { value: "", error: "You must input a valid phone number" },
-        state: { value: "", error: "You must specify a State of origin" },
-        location: { value: "", error: "You must specify your current location" },
+        state: { error: "You must specify a State of origin" },
+        location: { error: "You must specify your current location" },
         password: { value: "", error: "Password must contain one symbol, number\n and capital letter" },
         cpassword: { value: "", error: "Confirm password does not match the password provided" }
     });
@@ -46,10 +47,10 @@ const Signup = () => {
     const firstnameValid = (value: string = form.firstname.value)=> !validator.isEmpty(value);
     const lastnameValid = (value: string = form.lastname.value)=> !validator.isEmpty(value);
     const phoneValid = (value: string = form.phone.value)=> validator.isMobilePhone(value);
-    const passwordValid = (value: string = form.password.value)=>validator.isStrongPassword(form.password.value);
-    const cpasswprdValid = (value: string = form.cpassword.value)=> form.password.value === form.cpassword.value;
-    const stateValid = (value: string = form.state.value)=> !validator.isEmpty(form.state.value);
-    const locationValid = (value: string = form.location.value)=> !validator.isEmpty(form.location.value);
+    const passwordValid = (value: string = form.password.value)=>validator.isStrongPassword(value);
+    const cpasswprdValid = (value: string = form.cpassword.value)=> form.password.value === value;
+    const stateValid = (value: OptionItem | undefined = form.state.value)=> value !== undefined;
+    const locationValid = (value: OptionItem | undefined = form.location.value)=> value !== undefined;
 
     const onEmailChange = (value: string) => setForm({ ...form, email: {...form.email, value, valid: emailValid(value)} });
     const onFirstNameChange = (value: string) => setForm({ ...form, firstname: {...form.firstname, value, valid: firstnameValid(value)} });
@@ -57,8 +58,8 @@ const Signup = () => {
     const onPhoneChange = (value: string) => setForm({ ...form, phone: {...form.phone, value, valid: phoneValid(value)} });
     const onPasswordChange = (value: string) => setForm({ ...form, password: {...form.password, value, valid: passwordValid(value)} });
     const onCPasswordChange = (value: string) => setForm({ ...form, cpassword: {...form.cpassword, value, valid: cpasswprdValid(value) } });
-    const onStateChange = (value: string) => setForm({ ...form, state: {...form.state, value, valid: stateValid(value) } });
-    const onLocationChange = (value: string) => setForm({ ...form, location: {...form.location, value, valid: locationValid(value) } });
+    const onStateChange = (value: OptionItem) => setForm({ ...form, state: {...form.state, value, valid: stateValid(value) } });
+    const onLocationChange = (value: OptionItem) => setForm({ ...form, location: {...form.location, value, valid: locationValid(value) } });
 
     const check = () =>{
         setForm({ ...form, email: {...form.email, valid: emailValid() },
@@ -77,7 +78,7 @@ const Signup = () => {
       console.log(form)
         return { 
             email: form.email.value, firstname: form.firstname.value, lastname: form.lastname.value,
-            phone: form.phone.value, password: form.password.value, location: form.location.value, state: form.state.value
+            phone: form.phone.value, password: form.password.value, location: form.location.value!.label, state: form.state.value!.label
         }
     }
 
@@ -199,13 +200,13 @@ const Signup = () => {
             */}
               <Dropdown
         data={states}
-        onChange={(e) => onStateChange(e.label)}
+        onChange={onStateChange}
         placeholder="Select State"
       />
 
 <Dropdown
-        data={locations(form.state.value)}
-        onChange={(e) => onLocationChange("location")}
+        data={locations(form.state.value?.label ?? "")}
+        onChange={onLocationChange}
         placeholder="Select Location"
       />
            
