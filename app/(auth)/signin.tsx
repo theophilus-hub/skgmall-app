@@ -2,7 +2,7 @@ import { View, Text, ScrollView, TouchableOpacity, Image, Alert} from 'react-nat
 import { Link, router, Redirect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FormField from '../../components/formField';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import WideButton from '../../components/wideButton';
 import Eye from '../../assets/images/auth/eye-slash.png';
 import Google from '../../assets/images/auth/google logo.png';
