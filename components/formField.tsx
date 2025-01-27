@@ -1,5 +1,5 @@
 import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import eye from '../assets/images/auth/eye.png';
 import eyeSlash from '../assets/images/auth/eye-slash.png';
 
@@ -20,6 +20,7 @@ const FormField: React.FC<FormFieldProps>  = ({placeholder, value, handeChangeTe
       <TextInput
         className=' text-black opacity-80 font-inter font-medium text-sm w-full h-8 pb-1 '
         placeholder={placeholder}
+        value={value}
         placeholderTextColor='#2D2D2DCC'
         onChangeText={handeChangeText}
         secureTextEntry = {inputType === 'Password' && !showPassword}
