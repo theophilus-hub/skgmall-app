@@ -22,7 +22,7 @@ const TabsLayout = () => {
   useEffect(() => {
     setTimeout(() => {
       setShowSplash(false);
-    }, 1500);
+    }, 2000);
     // router.replace('/signup')
   });
 
@@ -66,7 +66,8 @@ const TabsLayout = () => {
           tabBarShowLabel: false,
           headerShown: false,
           tabBarStyle: {
-            height: 87,
+            height: 100,
+            paddingTop: 15 ,
             position: "absolute",
             bottom: 0,
             right: 0,

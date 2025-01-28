@@ -44,10 +44,17 @@ const GlobalProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     const isLoggedIn = useMemo(()=> state.user !== null, [state.user]);
 
     const login = async(details: Credentials) =>{
-        const result = await signInWithEmail(details.email, details.password);
+        console.log(details)
+        const result = await supabase.auth.signInWithPassword({email: details.email, password: details.password});
         if(result){
-            setState(init => { return { ...init, user: result } }); 
+            console.log(result)
+            if(result.data.user){
+                setState({isLoading: false, user: result.data?.user})
+            }
+            
+            return { isLoading: false, user: result.data }; 
         }else{
+            console.log(result)
             throw new Error("wrong credentias");
         }
     }
@@ -58,11 +65,13 @@ const GlobalProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
             email: details.email,
             password: details.password,
             options: {
+                
                 data: { ...details },
             },
         });
 
         if(error){
+            console.log(details)
               console.log(error)
             throw error;
             
