@@ -30,12 +30,13 @@ export type RegistrationDetails = {
 export type Store =  {
     id: number;
     name: string;
-    openT: string;
-    closeT: string;
-    storeCat: string;
+    open_time: string;
+    close_time: string;
+    store_category: string;
+    icon_url: string;
     location: string;
-    icon: string;
     closed: boolean;
+    promo?: string
 }
 
 export type StoreCategory = {

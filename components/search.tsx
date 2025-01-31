@@ -13,7 +13,7 @@ export interface SearchProps{
 const Search: React.FC<SearchProps> = ({placeholder, value, handleChangeText, inputType}) => {
     const [showPassword, setShowPassword] = useState(false)
     return (
-      <View className='flex flex-row space-x-2 bg-notwhite w-[343px] h-[49]  rounded-[10px] py-2 px-8 my-2 justify-start items-center focus:border focus:border-slate-300 '>
+      <View className='flex flex-row space-x-2 bg-notwhite h-[49]  rounded-[10px] py-2 px-8 my-2 justify-start items-center focus:border focus:border-slate-300 '>
         
         <Image 
             source={search}

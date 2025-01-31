@@ -1,93 +1,66 @@
 import React, { createContext, useState, useEffect, Children, useContext, PropsWithChildren, useCallback, useMemo } from "react";
 import { Credentials, Store, StoreCategory } from "./models";
-import { data, storeCat } from "lib/data";
 import { supabase } from "lib/supabase";
-
 
 interface StoresState {
     stores: Store[]
     storeCats: StoreCategory[]
 }
 
-
-export interface StoresContextType extends Partial<StoresState> {
+export interface StoresContextType extends StoresState {
     loading: boolean,
     error?: any,
     isError: boolean
+    refresh: () => Promise<void>
 }
 
 export const StoresContext = createContext<StoresContextType | undefined>(undefined);
-export const useStores = () => {
+export const useStoresContext = () => {
     const value = useContext(StoresContext);
-
     if (!value) {
         throw new Error('useStores must be wrapped inside StoresContextProvider');
     }
+
     return value;
 }
 
 const StoresContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
-    const [state, setState] = useState<StoresState>();
-    const [loadingState, setLoadingState] = useState<{ loading: boolean, error?: any, isError: boolean }>({ loading: true, isError: false });
+    const [state, setState] = useState<Omit<StoresContextType, "refresh">>({ storeCats: [], stores: [], loading: true, isError: false });
 
-
-    const load = async (): Promise<StoresState | undefined> => {
-        try {
-            const delay = (ms: number) => {
-                return new Promise((resolve) => setTimeout(resolve, ms));
-            }
-
-            await delay(2000);
-
-
-            const { data: store_categories, error } = await supabase
-                .from('store_categories')
-                .select('*')
-
-            if (error === null) {
-                console.log(store_categories)
-                let { data: stores, error: errorstore } = await supabase
-                    .from('stores')
-                    .select('*')
-                if (errorstore === null) {
-                    if (store_categories && stores) {
-                        console.log(stores)
-                        setState({ storeCats: store_categories, stores: stores })
-                    }
-                } else {
-                    console.log(errorstore)
-                }
-            } else {
-                console.log(error)
-            }
-            if (state?.stores && state.storeCats) {
-                return { stores: state?.stores, storeCats: state?.storeCats };
-            }
-        } catch (e) {
-            console.error(e);
+    const load = async (): Promise<StoresState> => {
+        const { data: store_categories, error: categoriesError } = await supabase.from('store_categories').select('*');
+        if(categoriesError !== null){
+            throw categoriesError;
         }
+
+        let { data: stores, error: storeError } = await supabase.from('stores').select('*');
+        if(storeError !== null){
+            throw storeError;
+        }
+
+        return { stores: stores!, storeCats: store_categories };
     };
 
-    const init = useCallback(async () => {
-        if (!state) {
-            load().then((savedState) => {
-                console.log(JSON.stringify(savedState));
-                if (savedState) {
-                    setState(savedState);
-                    setLoadingState(init => { return { ...init, loading: false } });
-                } else {
-                    setLoadingState(init => { return { ...init, loading: false, isError: true, error: "unable to fetch Stores, please check network connection" } });
-                }
-            });
+    const fetch = async () =>{
+        try{
+            const response = await load();
+            console.log(JSON.stringify(response));
+            setState(init => { return { ...init, ...response } });
+        }catch(error){
+            console.error(error);
+            setState(init => { return { ...init, isError: true, error: "unable to fetch Stores, please check network connection" } });
+        }finally{
+            setState(init => { return { ...init, loading: false } })
         }
-    }, [state]);
+    }
 
+    const init = useCallback(fetch, []);
     useEffect(() => {
-        init();
-    }, [state, init]);
+        init()
+    }, [init]);
 
     return (
-        <StoresContext.Provider value={{ ...state, ...loadingState }}>
+        <StoresContext.Provider value={{ ...state, refresh: fetch }}>
             {children}
         </StoresContext.Provider>
     )

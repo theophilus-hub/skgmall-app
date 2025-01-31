@@ -37,17 +37,16 @@ const TabsLayout = () => {
 
   const TabIcon: React.FC<TabIconProps> = ({ icon, name, focused }) => {
     return (
-      <View className="items-center justify-center mt-2">
+      <View className="items-center justify-center" style={{ width:100 }}>
         <Image source={icon} tintColor={focused ? "#EA0001" : "#606060"} />
         <Text
           className={`${
             focused
               ? "font-bold text-primary"
               : "font-normal text-black opacity-60"
-          } text-xs `}
+          } text-xs`}
         >
-          {" "}
-          {name}{" "}
+          {name}
         </Text>
       </View>
     );
@@ -66,7 +65,7 @@ const TabsLayout = () => {
           tabBarShowLabel: false,
           headerShown: false,
           tabBarStyle: {
-            height: 100,
+            height: 80,
             paddingTop: 15 ,
             position: "absolute",
             bottom: 0,

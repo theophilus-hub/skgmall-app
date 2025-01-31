@@ -3,7 +3,7 @@ import React from 'react'
 
 export interface CategoryProps{
     name: string,
-    icon: string
+    icon?: string
 }
 
 const Category: React.FC<CategoryProps> = ({name, icon}) => {

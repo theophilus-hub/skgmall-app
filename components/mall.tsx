@@ -1,10 +1,11 @@
 import { View, Text, Image, TouchableOpacity, FlatList } from 'react-native'
 import NextArrow from '../assets/images/tabs/mall/next.png'
 import StoreSideScroll from './storeSideScroll';
+import { Store, StoreCategory } from 'context/models';
 
 export interface MallProps{
-    data: { id: number, storeCat: string, promo?: string, closed: boolean, icon: string, name: string, openT: String, closeT: String }[],
-    catData: { id: number, uid: string, name: string }[]
+    data: Store[],
+    catData: StoreCategory[]
 }
 
 const Mall: React.FC<MallProps> = ({data, catData}) => {

@@ -13,10 +13,7 @@ import { onbData, OnbDataType } from '../lib/onbData';
 import React, { useRef, useState, useEffect } from 'react';
 
 export default function Welcome() {
-  const {isLoading, isLoggedIn} = useGlobalContext()
   const { width } = Dimensions.get('window');
-
-  if(!isLoading && isLoggedIn ) return <Redirect href='/mall' />
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<FlatList<OnbDataType>|null>(null);
