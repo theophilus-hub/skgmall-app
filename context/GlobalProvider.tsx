@@ -47,7 +47,7 @@ const GlobalProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     const login = async(details: Credentials) =>{
         setState(init => { return { ...init, isLoading: true } });
         const { data, error } = await supabase.auth.signInWithPassword({email: details.email, password: details.password});
-
+//  console.log(`I am logging in as ${JSON.stringify(data.user)}`);
         setState(init => { return { ...init, user: data.user === null ? undefined :  data.user, isLoading: false, error: error } });
         if(data.user === null){
             console.log(error)

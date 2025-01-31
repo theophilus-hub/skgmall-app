@@ -44,21 +44,22 @@ const StoresContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
                 .from('store_categories')
                 .select('*')
 
-            if (!error) {
-                let { data: stores, error } = await supabase
+            if (error === null) {
+                console.log(store_categories)
+                let { data: stores, error: errorstore } = await supabase
                     .from('stores')
                     .select('*')
-                if (!error) {
+                if (errorstore === null) {
                     if (store_categories && stores) {
+                        console.log(stores)
                         setState({ storeCats: store_categories, stores: stores })
                     }
+                } else {
+                    console.log(errorstore)
                 }
+            } else {
+                console.log(error)
             }
-
-
-
-
-
             if (state?.stores && state.storeCats) {
                 return { stores: state?.stores, storeCats: state?.storeCats };
             }

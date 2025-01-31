@@ -12,7 +12,7 @@ const Spalsh = () =>{
         if(!loading){
             if(credentials && autoLogin){
                 globalState.login(credentials).then((_)=>{
-                    console.log(`I am logging in as ${globalState.user}`);
+                   
                     router.replace('/(tabs)/mall');
                 }).catch((error)=>{
                     console.error(`Failed to signin because of ${error}`);
