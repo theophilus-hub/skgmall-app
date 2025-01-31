@@ -85,7 +85,7 @@ const SettingsContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
                     setState(savedState);
                     setLoadingState({ loading: false, firstVisit: false });
                 }else{
-                    setState({ themeMode: "auto", autoLogin: false });
+                    setState({ themeMode: "auto", autoLogin: true });
                     setLoadingState({ loading: false, firstVisit: true });
                 }
             });

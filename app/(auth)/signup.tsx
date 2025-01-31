@@ -15,7 +15,6 @@ import { useSettings } from 'context/settingsContext';
 import { RegistrationDetails } from 'context/models';
 import SignUpForm from 'components/signup-form';
 import validator from 'validator';
-import FormSelect from 'components/form-select';
 import { locations, states } from 'lib/utils';
 import Dropdown, { OptionItem } from "components/dropDown";
 
@@ -75,7 +74,6 @@ const Signup = () => {
     }
 
     const convert = (): RegistrationDetails =>{
-      console.log(form)
         return { 
             email: form.email.value, firstname: form.firstname.value, lastname: form.lastname.value,
             phone: form.phone.value, password: form.password.value, location: form.location.value!.label, state: form.state.value!.label

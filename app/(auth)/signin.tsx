@@ -24,11 +24,13 @@ const SignIn = () => {
         if (!form.email || !form.password) {
             Alert.alert('notice', 'wrong input')
         }else{
+            console.log(form);
             setIsSubmitting(true);
             login({ email: form.email, password: form.password }).then(()=>{
                 setCredentials({ email: form.email, password: form.password });
                 router.replace('/(tabs)/mall');
             }).catch((error)=>{
+                console.log(error);
                 Alert.alert('Error', 'wrong credentials')
             }).finally(()=> setIsSubmitting(false));
         }
