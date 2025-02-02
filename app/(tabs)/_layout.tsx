@@ -1,8 +1,6 @@
 import { StyleSheet, Text, View, Image, ImageSourcePropType } from "react-native";
 import { Tabs, router } from "expo-router";
-import { useFonts } from "expo-font";
 import React, { useEffect, useState } from "react";
-import SplashScreen from "../../components/splashScreen";
 
 import home from "../../assets/images/tabs/home.png";
 import favorites from "../../assets/images/tabs/favorites.png";
@@ -17,20 +15,6 @@ import orders2 from "../../assets/images/tabs/bookmark2.png";
 import user2 from "../../assets/images/tabs/user2.png";
 
 const TabsLayout = () => {
-  const [showSplash, setShowSplash] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setShowSplash(false);
-    }, 2000);
-    // router.replace('/signup')
-  });
-
-  const [fontsLoaded, error] = useFonts({
-    Odin: require("../../assets/fonts/Odin-Bold.otf"),
-    Inter: require("../../assets/fonts/Inter Regular.ttf"),
-  });
-
   interface TabIconProps{
     icon: ImageSourcePropType, name: string, focused: boolean
   }
@@ -52,13 +36,6 @@ const TabsLayout = () => {
     );
   };
 
-  if (showSplash == true) {
-    return (
-      <>
-        <SplashScreen />
-      </>
-    );
-  } else {
     return (
       <Tabs
         screenOptions={{
@@ -151,7 +128,6 @@ const TabsLayout = () => {
         />
       </Tabs>
     );
-  }
 };
 
 export default TabsLayout;

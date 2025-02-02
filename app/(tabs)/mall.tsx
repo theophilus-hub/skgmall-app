@@ -39,32 +39,25 @@ const Mall = () => {
 
   return (
     <SafeAreaView className="bg-white h-full">
-      <ScrollView
-            refreshControl={
-            <RefreshControl refreshing={loading} onRefresh={onRefresh} />
-            }>
-            <View className=""> 
+        <ScrollView refreshControl={ <RefreshControl refreshing={loading} onRefresh={onRefresh} /> }>
             <View className="my-4 mx-6 flex flex-row items-center justify-between">
-              <Text className="font-inter font-semibold text-black text-sm">
-                { `Hi ${user?.user_metadata.firstname} ${user?.user_metadata.lastname}, \nWhere will you order from today?` }
-              </Text>
-              <TouchableOpacity activeOpacity={0.6}>
-                <Image source={Bell} className="justify-self-end" />
-              </TouchableOpacity>
+                <Text className="font-inter font-semibold text-black text-sm">
+                    { `Hi ${user?.user_metadata.firstname} ${user?.user_metadata.lastname}, \nWhere will you order from today?` }
+                </Text>
+                <TouchableOpacity activeOpacity={0.6}>
+                    <Image source={Bell} className="justify-self-end" />
+                </TouchableOpacity>
             </View>
             <View className="mx-6">
-              <Search value={""} />
+                <Search value={""} />
             </View>
             <View className="my-2 ml-6">
-              <Text className="font-inter font-bold text-black text-base mb-2">
-                Food categories
-              </Text>
-              <View className="">
-                <CatSideScroll data={storeCats} />
-              </View>
+                <Text className="font-inter font-bold text-black text-base mb-2">Food categories</Text>
+                <View className="">
+                    <CatSideScroll data={storeCats} />
+                </View>
             </View>
             <MainMall data={stores} catData={storeCats} />
-          </View>
         </ScrollView>
     </SafeAreaView>
   );

@@ -9,13 +9,13 @@ const AuthLayout = () => {
         "Inter" : require("../../assets/fonts/Inter Regular.ttf")
     })
 
-return (
-  <Stack>
-      <Stack.Screen name='signin' options={{headerShown: false}} />
-      <Stack.Screen name='signup' options={{headerShown: false}} />
-      <Stack.Screen name='profile' options={{headerShown: false}} />
-  </Stack>
-)
+    return (
+    <Stack>
+        <Stack.Screen name='signin' options={{headerShown: false}} />
+        <Stack.Screen name='signup' options={{headerShown: false}} />
+        <Stack.Screen name='profile' options={{headerShown: false}} />
+    </Stack>
+    )
 }
 
 export default AuthLayout

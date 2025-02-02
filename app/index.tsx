@@ -2,9 +2,10 @@ import { useGlobalContext } from "context/GlobalProvider";
 import { useSettings } from "context/settingsContext";
 import { router } from "expo-router";
 import { useCallback, useEffect } from "react";
-import { Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
+import Logo from '../assets/SKG2b.png'
 
-const Spalsh = () =>{
+const SplashScreen = () =>{
     const { loading, firstVisit, credentials, autoLogin } = useSettings();
     const globalState = useGlobalContext();
 
@@ -31,9 +32,12 @@ const Spalsh = () =>{
 
     return (
         <View style={{ flexDirection: "column", height: "100%", alignItems: "center", padding: 10 }}>
-            <Text style={{ flex: 1, textAlign: "center", verticalAlign: "middle" }}>Welcome to SKG MAll</Text>
+            <View className='items-center justify-center' style={{ flex: 1 }}>
+                <Image source={Logo} className=' h-14'resizeMode='contain' />
+            </View>
+            <Text style={{  textAlign: "center"}}>Loading, please wait...</Text>
         </View>
     );
 }
 
-export default Spalsh;
+export default SplashScreen;
