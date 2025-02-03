@@ -13,20 +13,15 @@ export interface StoreSideScrollProps{
 
 const StoreSideScroll: React.FC<StoreSideScrollProps> = ({data, cat}) => {
     return (
-        <View>
-            <FlatList className='text-black'
+        <FlatList className='text-black'
             showsHorizontalScrollIndicator= {false} 
                 data = {data.filter((item)=> item.store_category === cat)}
                 keyExtractor={(item) => item.id.toString()}
-                
                 renderItem={({item}) => (
-                        <View key={item.id}>
-                            <SmallStoreCard closed={item.closed} icon={item.icon_url} name={item.name} openT={item.open_time} closeT={item.close_time} promo={item.promo}/>
-                        </View>
+                    <SmallStoreCard key={item.id} store={item}/>
                 )}
                 horizontal
             /> 
-        </View>
     );
 }
 
