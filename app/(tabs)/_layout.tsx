@@ -42,7 +42,7 @@ const TabsLayout = () => {
           tabBarShowLabel: false,
           headerShown: false,
           tabBarStyle: {
-            height: 80,
+            height: 90,
             paddingTop: 15 ,
             position: "absolute",
             bottom: 0,
