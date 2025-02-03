@@ -1,6 +1,5 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native'
-import React from 'react'
-import StoreImage from '../assets/images/tabs/mall/res/bustling/front.jpg'
+import React from 'react';
 import { router } from 'expo-router';
 import { Store } from 'context/models';
 
@@ -8,7 +7,7 @@ export interface StoreCardProps{ store: Store }
 
 const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
   return (
-    <TouchableOpacity activeOpacity={0.8} onPress={() => router.push('/')}>
+    <TouchableOpacity activeOpacity={0.8} onPress={() => router.push(`/store/${store.id}`) }>
         <View className='bg-notwhite w-full h-[160] rounded-[10px] overflow-hidden'>
             <Image source={{uri: store.icon_url}} resizeMode='cover' className='w-full' />
         </View>

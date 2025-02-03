@@ -1,8 +1,4 @@
 import { View, Text, FlatList } from 'react-native'
-import StoreImage1 from '../assets/images/tabs/mall/res/bustling/front.jpg'
-import StoreImage2 from '../assets/images/tabs/mall/res/pele/front.jpg'
-import StoreImage3 from '../assets/images/tabs/mall/res/theSpot/front.jpg'
-import StoreImage4 from '../assets/images/tabs/mall/res/blazers/front.jpg'
 import SmallStoreCard from './smallStoreCard'
 import { Store } from 'context/models'
 
