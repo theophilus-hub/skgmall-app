@@ -1,8 +1,8 @@
-import { View, Text, ScrollView, TouchableOpacity, Image, Alert} from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, Alert, StyleSheet} from 'react-native';
 import { Link, router, Redirect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FormField from '../../components/formField';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import WideButton from '../../components/wideButton';
 import Eye from '../../assets/images/auth/eye-slash.png';
 import Google from '../../assets/images/auth/google logo.png';
@@ -15,107 +15,89 @@ import { useSettings } from 'context/settingsContext';
 import { RegistrationDetails } from 'context/models';
 import SignUpForm from 'components/signup-form';
 import validator from 'validator';
-import FormSelect from 'components/form-select';
 import { locations, states } from 'lib/utils';
+import Dropdown, { OptionItem } from "components/dropDown";
+
+type FormUnit = { value: string, valid?: boolean, error: string }
+type FormSelectionUnit = { value?: OptionItem, valid?: boolean, error: string }
+type Form = { 
+    email: FormUnit, firstname: FormUnit, lastname: FormUnit, phone: FormUnit, state: FormSelectionUnit,
+    location: FormSelectionUnit, password: FormUnit, cpassword: FormUnit
+}
 
 const Signup = () => {
-    const [form, setForm] = useState({
-        email: { value: "", valid: true, error: "You must input a valid email adress" },
-        firstname: { value: "", valid: true, error: "First name cannot be empty" },
-        lastname: { value: "", valid: true, error: "Last name cannot be empty" },
-        phone: { value: "", valid: true, error: "You must input a valid phone number" },
-        state: { value: "", valid: true, error: "You must specify a State of origin" },
-        location: { value: "", valid: true, error: "You must specify your current location" },
-        password: { value: "", valid: true, error: "Password must contain one symbol, number and capital letter" },
-        cpassword: { value: "", valid: true, error: "Confirm password does not match the password provided" }
-    });
-    
     const [isSubmitting, setIsSubmitting] = useState(false);
     const {register} = useGlobalContext()
     const [stateError, setStateError] = useState('');
     const { setCredentials } = useSettings();
 
-    const onInputChange = (name: string, value: string) =>{
-        switch(name){
-            case "email":
-                setForm({ ...form, email: {...form.email, value, valid: validator.isEmail(value)} });
-                break;
-            case "firstname":
-                setForm({ ...form, firstname: {...form.firstname, value, valid: !validator.isEmpty(value)} });
-                break;
-            case "lastname":
-                setForm({ ...form, lastname: {...form.lastname, value, valid: !validator.isEmpty(value)} });
-                break;
-            case "phone":
-                setForm({ ...form, phone: {...form.phone, value, valid: validator.isMobilePhone(value)} });
-                break;
-            case "password":
-                setForm({ ...form, password: {...form.password, value, valid: validator.isStrongPassword(value)} });
-                break;
-            case "cpassword":
-                setForm({ ...form, cpassword: {...form.cpassword, value, valid: form.password.value === value } });
-                break;
-            case "state":
-                setForm({ ...form, state: {...form.state, value, valid: !validator.isEmpty(value) } });
-                break;
-            case "location":
-                setForm({ ...form, location: {...form.location, value, valid: !validator.isEmpty(value) } });
-                break;
-        }
-    }
+    const [form, setForm] = useState<Form>({
+        email: { value: "", error: "You must input a valid email adress" },
+        firstname: { value: "", error: "First name cannot be empty" },
+        lastname: { value: "", error: "Last name cannot be empty" },
+        phone: { value: "", error: "You must input a valid phone number" },
+        state: { error: "You must specify a State of origin" },
+        location: { error: "You must specify your current location" },
+        password: { value: "", error: "Password must contain one symbol, number\n and capital letter" },
+        cpassword: { value: "", error: "Confirm password does not match the password provided" }
+    });
 
-    const check = (): boolean =>{
-        const emailValid = validator.isEmail(form.email.value);
-        setForm({ ...form, email: {...form.email, valid: emailValid } });
+    const emailValid = (value: string = form.email.value)=> validator.isEmail(value);
+    const firstnameValid = (value: string = form.firstname.value)=> !validator.isEmpty(value);
+    const lastnameValid = (value: string = form.lastname.value)=> !validator.isEmpty(value);
+    const phoneValid = (value: string = form.phone.value)=> validator.isMobilePhone(value);
+    const passwordValid = (value: string = form.password.value)=>validator.isStrongPassword(value);
+    const cpasswprdValid = (value: string = form.cpassword.value)=> form.password.value === value;
+    const stateValid = (value: OptionItem | undefined = form.state.value)=> value !== undefined;
+    const locationValid = (value: OptionItem | undefined = form.location.value)=> value !== undefined;
 
-        const firstnameValid = !validator.isEmpty(form.firstname.value);
-        setForm({ ...form, firstname: {...form.firstname, valid: firstnameValid} });
+    const onEmailChange = (value: string) => setForm({ ...form, email: {...form.email, value, valid: emailValid(value)} });
+    const onFirstNameChange = (value: string) => setForm({ ...form, firstname: {...form.firstname, value, valid: firstnameValid(value)} });
+    const onLastNameChange = (value: string) => setForm({ ...form, lastname: {...form.lastname, value, valid: lastnameValid(value)} });
+    const onPhoneChange = (value: string) => setForm({ ...form, phone: {...form.phone, value, valid: phoneValid(value)} });
+    const onPasswordChange = (value: string) => setForm({ ...form, password: {...form.password, value, valid: passwordValid(value)} });
+    const onCPasswordChange = (value: string) => setForm({ ...form, cpassword: {...form.cpassword, value, valid: cpasswprdValid(value) } });
+    const onStateChange = (value: OptionItem) => setForm({ ...form, state: {...form.state, value, valid: stateValid(value) } });
+    const onLocationChange = (value: OptionItem) => setForm({ ...form, location: {...form.location, value, valid: locationValid(value) } });
 
-        const lastnameValid = !validator.isEmpty(form.lastname.value);
-        setForm({ ...form, lastname: {...form.lastname, valid: lastnameValid} });
-        
-        const phoneValid = validator.isMobilePhone(form.phone.value);
-        setForm({ ...form, phone: {...form.phone, valid: phoneValid} });
+    const check = () =>{
+        setForm({ ...form, email: {...form.email, valid: emailValid() },
+            firstname: {...form.firstname, valid: firstnameValid()},
+            lastname: {...form.lastname, valid: lastnameValid() },
+            phone: {...form.phone, valid: phoneValid() },
+            password: {...form.password, valid: passwordValid() },
+            cpassword: {...form.cpassword, valid: cpasswprdValid() },
+            state: {...form.state, valid: stateValid() },
+            location: {...form.location, valid: locationValid() } });
 
-        const passwordValid = validator.isStrongPassword(form.password.value);
-        setForm({ ...form, password: {...form.password, valid: passwordValid } });
-
-        const cpasswprdValid = form.password.value === form.cpassword.value;
-        setForm({ ...form, cpassword: {...form.cpassword, valid: cpasswprdValid } });
-
-        const stateValid = !validator.isEmpty(form.state.value);
-        setForm({ ...form, state: {...form.state, valid: stateValid} });
-
-        const locationValid = !validator.isEmpty(form.location.value);
-        setForm({ ...form, location: {...form.location, valid: locationValid} });
-
-        return emailValid && firstnameValid && lastnameValid && phoneValid && passwordValid && cpasswprdValid && stateValid && locationValid;
+        return form.email.valid && form.firstname.valid && form.lastname.valid && form.phone.valid && form.password.valid && form.cpassword.valid && form.state.valid && form.location.valid;
     }
 
     const convert = (): RegistrationDetails =>{
         return { 
             email: form.email.value, firstname: form.firstname.value, lastname: form.lastname.value,
-            phone: form.phone.value, password: form.password.value, location: form.location.value, state: form.state.value
+            phone: form.phone.value, password: form.password.value, location: form.location.value!.label, state: form.state.value!.label
         }
     }
 
     const submit = () => {
-        if (!check()) {
-            Alert.alert('notice', 'wrong input')
-        }
-        setIsSubmitting(true);
+        if (check()) {
+            setIsSubmitting(true);
 
-        register(convert()).then(()=>{
-            setCredentials({ email: form.email.value, password: form.password.value });
-            router.replace('/mall')
-        }).catch((error)=>{
-            setStateError(error.message);
-            if ((error as Error).message === 'AuthApiError: User already registered') {
-                Alert.alert('Error', 'User Already Exist')
-            } else {
-                Alert.alert('Error', (error as Error).message)
-            }
-        }).finally(()=> setIsSubmitting(false));
+            register(convert()).then(()=>{
+                setCredentials({ email: form.email.value, password: form.password.value });
+                router.replace('/mall')
+            }).catch((error)=>{
+                setStateError(error.message);
+                if ((error as Error).message === 'AuthApiError: User already registered') {
+                    Alert.alert('Error', 'User Already Exist')
+                } else {
+                    Alert.alert('Error', (error as Error).message)
+                }
+            }).finally(()=> setIsSubmitting(false));
+        }else{
+            Alert.alert('notice', 'wrong input');
+        }
     }
     
     return (
@@ -127,7 +109,10 @@ const Signup = () => {
                 source={SKG}
               />
           <Text className='font-bold font-inter text-center text-base'>Welcome to SKG Mall {'\n'}Sign Up</Text>
-          <View className='mt-16'>
+
+         
+
+          <View className='mt-8'>
             <TouchableOpacity activeOpacity={0.6} className='flex flex-row space-x-3 justify-center items-center bg-white border border-gray my-2 py-3 px-4 w-[338px] rounded-[10px]'>
               <Image 
                 source={Google} 
@@ -143,7 +128,16 @@ const Signup = () => {
               />
               <Text>Sign up with Apple ID</Text>
             </TouchableOpacity>
+           <View className='justify-center items-center w-full  px-2 '>
+          <View className='flex flex-row justify-center items-center p-4'>
+            <Text className='text-sm font inter font-semibold'>Already have an account?</Text>
+            <TouchableOpacity onPress={() => router.replace('/signin')} activeOpacity={0.4} className=' ml-4 '>
+              <Text className='font-semibold font-inter text-base text-primary'>Sign in</Text>
+            </TouchableOpacity>
           </View>
+          
+        </View>
+        </View>
           <View className='flex flex-row justify-center items-center space-x-4 mx-0 my-2'>
                 <View className='min-h-[1px] h-[1px] min-w-[168px] bg-black opacity-60'></View>
                 <Text className='font-bold font-inter text-base'>OR</Text>
@@ -156,7 +150,7 @@ const Signup = () => {
                 value={form.email.value}
                 isValid={form.email.valid}
                 errorMessage={form.email.error}
-                handleChange={(e) => onInputChange("email", e)}
+                handleChange={onEmailChange}
                 inputType='email'
               />
               <SignUpForm 
@@ -164,7 +158,7 @@ const Signup = () => {
                 value={form.firstname.value}
                 isValid={form.firstname.valid}
                 errorMessage={form.firstname.error}
-                handleChange={(e) => onInputChange("firstname", e)}
+                handleChange={onFirstNameChange}
                 inputType='text'
               />
               <SignUpForm 
@@ -172,7 +166,7 @@ const Signup = () => {
                 value={form.lastname.value}
                 isValid={form.lastname.valid}
                 errorMessage={form.lastname.error}
-                handleChange={(e) => onInputChange("lastname", e)}
+                handleChange={onLastNameChange}
                 inputType='text'
               />
               <SignUpForm 
@@ -180,7 +174,7 @@ const Signup = () => {
                 value={form.phone.value}
                 isValid={form.phone.valid}
                 errorMessage={form.phone.error}
-                handleChange={(e) => onInputChange("phone", e)}
+                handleChange={onPhoneChange}
                 inputType='numeric'
               />
               <SignUpForm 
@@ -188,7 +182,7 @@ const Signup = () => {
                 value={form.password.value}
                 isValid={form.password.valid}
                 errorMessage={form.password.error}
-                handleChange={(e) => onInputChange("password", e)}
+                handleChange={onPasswordChange}
                 inputType= 'Password'
               />
                <SignUpForm
@@ -196,11 +190,24 @@ const Signup = () => {
                 value={form.cpassword.value}
                 isValid={form.cpassword.valid}
                 errorMessage={form.cpassword.error}
-                handleChange={(e) => onInputChange("cpassword", e)}
+                handleChange={onCPasswordChange}
                 inputType= 'Password'
               />
-              <FormSelect placeholder='Select State' handleChange={(e) => onInputChange("state", e)} valid={form.state.valid} value={ validator.isEmpty(form.state.value)? undefined : form.state.value } values={states} errorMessage='please select a state' />
+              {/* <FormSelect placeholder='Select State' handleChange={(e) => onInputChange("state", e)} valid={form.state.valid} value={ validator.isEmpty(form.state.value)? undefined : form.state.value } values={states} errorMessage='please select a state' />
               <FormSelect placeholder='Select Location' handleChange={(e) => onInputChange("location", e)} valid={form.location.valid} value={ validator.isEmpty(form.location.value)? undefined : form.location.value } values={locations(form.state.value)} errorMessage='please select a location' />
+            */}
+              <Dropdown
+        data={states}
+        onChange={onStateChange}
+        placeholder="Select State"
+      />
+
+<Dropdown
+        data={locations(form.state.value?.label ?? "")}
+        onChange={onLocationChange}
+        placeholder="Select Location"
+      />
+           
             </View>
             <View>
               <Text>{stateError}</Text>
@@ -222,13 +229,8 @@ const Signup = () => {
 
         
 
-        <View className='justify-center items-center w-full  px-2 '>
-          <View className='flex flex-row justify-center items-center p-4'>
-            <Text className='text-sm font inter font-semibold'>Already have an account?</Text>
-            <TouchableOpacity onPress={() => router.replace('/signin')} activeOpacity={0.4} className=' ml-4 '>
-              <Text className='font-semibold font-inter text-base text-primary'>Sign in</Text>
-            </TouchableOpacity>
-          </View>
+        <View className='justify-center items-center w-full  px-2 mb-8 '>
+         
           <View className='mx-2'>
               <Text className='font-normal font-inter text-sm text-center'>By clicking Sign up, you agree to the <Text className='text-secondary'>terms & conditions</Text> and <Text className='text-secondary'>privacy policy</Text>.</Text>
           </View>
@@ -238,5 +240,17 @@ const Signup = () => {
     </SafeAreaView>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#ddd",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 20,
+    gap: 10,
+  },
+});
+
 
 export default Signup

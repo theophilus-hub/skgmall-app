@@ -80,12 +80,12 @@ const SettingsContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const init = useCallback(async()=>{
         if(!state){
             load().then((savedState)=>{
-                console.log(JSON.stringify(savedState));
+                console.log(`stroed settings: ${JSON.stringify(savedState)}`);
                 if(savedState){
                     setState(savedState);
                     setLoadingState({ loading: false, firstVisit: false });
                 }else{
-                    setState({ themeMode: "auto", autoLogin: false });
+                    setState({ themeMode: "auto", autoLogin: true });
                     setLoadingState({ loading: false, firstVisit: true });
                 }
             });

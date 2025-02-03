@@ -1,8 +1,6 @@
 import { StyleSheet, Text, View, Image, ImageSourcePropType } from "react-native";
 import { Tabs, router } from "expo-router";
-import { useFonts } from "expo-font";
 import React, { useEffect, useState } from "react";
-import SplashScreen from "../../components/splashScreen";
 
 import home from "../../assets/images/tabs/home.png";
 import favorites from "../../assets/images/tabs/favorites.png";
@@ -17,56 +15,35 @@ import orders2 from "../../assets/images/tabs/bookmark2.png";
 import user2 from "../../assets/images/tabs/user2.png";
 
 const TabsLayout = () => {
-  const [showSplash, setShowSplash] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setShowSplash(false);
-    }, 1500);
-    // router.replace('/signup')
-  });
-
-  const [fontsLoaded, error] = useFonts({
-    Odin: require("../../assets/fonts/Odin-Bold.otf"),
-    Inter: require("../../assets/fonts/Inter Regular.ttf"),
-  });
-
   interface TabIconProps{
     icon: ImageSourcePropType, name: string, focused: boolean
   }
 
   const TabIcon: React.FC<TabIconProps> = ({ icon, name, focused }) => {
     return (
-      <View className="items-center justify-center mt-2">
+      <View className="items-center justify-center" style={{ width:100 }}>
         <Image source={icon} tintColor={focused ? "#EA0001" : "#606060"} />
         <Text
           className={`${
             focused
               ? "font-bold text-primary"
               : "font-normal text-black opacity-60"
-          } text-xs `}
+          } text-xs`}
         >
-          {" "}
-          {name}{" "}
+          {name}
         </Text>
       </View>
     );
   };
 
-  if (showSplash == true) {
-    return (
-      <>
-        <SplashScreen />
-      </>
-    );
-  } else {
     return (
       <Tabs
         screenOptions={{
           tabBarShowLabel: false,
           headerShown: false,
           tabBarStyle: {
-            height: 87,
+            height: 80,
+            paddingTop: 15 ,
             position: "absolute",
             bottom: 0,
             right: 0,
@@ -151,7 +128,6 @@ const TabsLayout = () => {
         />
       </Tabs>
     );
-  }
 };
 
 export default TabsLayout;

@@ -2,7 +2,7 @@ import { View, Text, ScrollView, TouchableOpacity, Image, Alert} from 'react-nat
 import { Link, router, Redirect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FormField from '../../components/formField';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import WideButton from '../../components/wideButton';
 import Eye from '../../assets/images/auth/eye-slash.png';
 import Google from '../../assets/images/auth/google logo.png';
@@ -24,11 +24,13 @@ const SignIn = () => {
         if (!form.email || !form.password) {
             Alert.alert('notice', 'wrong input')
         }else{
+            console.log(form);
             setIsSubmitting(true);
             login({ email: form.email, password: form.password }).then(()=>{
                 setCredentials({ email: form.email, password: form.password });
                 router.replace('/(tabs)/mall');
             }).catch((error)=>{
+                console.log(error);
                 Alert.alert('Error', 'wrong credentials')
             }).finally(()=> setIsSubmitting(false));
         }
@@ -42,7 +44,7 @@ const SignIn = () => {
                     <Text className='font-bold font-inter text-center text-base'>Welcome to SKG Mall {'\n'}Sign In</Text>
          
           <View className='mt-16'>
-            <View>
+            <View className=''>
               <FormField 
                 placeholder='Email or phone number'
                 value={form.email}

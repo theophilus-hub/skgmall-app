@@ -5,7 +5,8 @@ import { Credentials, RegistrationDetails } from "./models";
 
 interface GlobalState{
     isLoading: boolean,
-    user?: User
+    user?: User,
+    error?: any
 }
 
 export interface GlobalContextType extends GlobalState {
@@ -25,34 +26,39 @@ export const useGlobalContext = () => {
 }
 
 const GlobalProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-    const [state, setState] = useState<GlobalState>({ isLoading: true });
+    const [state, setState] = useState<GlobalState>({ isLoading: false });
 
     useEffect(() => {
-        getUser().then((res) => {
-            if(res){
-                setState(init => { return { ...init, user: res } }); 
-            }else{
-                setState(init => { return { ...init, user: undefined } }); 
-            }
-           
-        }).catch((error) => {
-            console.log(error)
-        }).finally(() => setState(init => { return { ...init, isLoading: true } }));
-    }, []);
+        if(state.user === undefined){
+            getUser().then((res) => {
+                if(res){
+                    setState(init => { return { ...init, user: res } }); 
+                }else{
+                    setState(init => { return { ...init, user: undefined } }); 
+                }
+            }).catch((error) => {
+                console.log(error)
+            }).finally(() => setState(init => { return { ...init, isLoading: false } }));
+        }
+    }, [state.user]);
 
     const isLoggedIn = useMemo(()=> state.user !== null, [state.user]);
 
     const login = async(details: Credentials) =>{
-        const result = await signInWithEmail(details.email, details.password);
-        if(result){
-            setState(init => { return { ...init, user: result } }); 
-        }else{
-            throw new Error("wrong credentias");
+        setState(init => { return { ...init, isLoading: true } });
+        const { data, error } = await supabase.auth.signInWithPassword({email: details.email, password: details.password});
+//  console.log(`I am logging in as ${JSON.stringify(data.user)}`);
+        setState(init => { return { ...init, user: data.user === null ? undefined :  data.user, isLoading: false, error: error } });
+        if(data.user === null){
+            console.log(error)
+            throw error;
         }
     }
 
     const register = async(details: RegistrationDetails)=> {
-        const { data, error } = await supabase.auth.signUp({
+        setState(init => { return { ...init, isLoading: true } });
+
+        const response = await supabase.auth.signUp({
             email: details.email,
             password: details.password,
             options: {
@@ -60,12 +66,10 @@ const GlobalProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
             },
         });
 
-        if(error){
-            throw error;
-        }
-
-        if(data.user){
-            setState(init => { return { ...init, user: data.user! } }); 
+        setState(init => { return { ...init, user: response.data.user === null ? undefined :  response.data.user, isLoading: false, error: response.error } });
+        if(response.error){
+            console.log(response.error);
+            throw response.error;            
         }
     }
 

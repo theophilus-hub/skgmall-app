@@ -1,69 +1,119 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  FlatList,
-  Image,
-  TouchableOpacity,
-  RefreshControl,
-} from "react-native";
-import React, { useEffect, useState } from "react";
+import { View, Text, ScrollView, Image, TouchableOpacity, RefreshControl, Animated, StyleSheet, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import Bell from "../../assets/images/tabs/mall/bell.png";
 
 import Search from "../../components/search";
-import CatSideScroll from "../../components/catSideScroll";
-import StoreSideScroll from "../../components/storeSideScroll";
-import MainMall from "../../components/mall";
+import { useStoresContext } from "context/shopsProvider";
+import { useGlobalContext } from "context/GlobalProvider";
+import MallDefault from "components/mall/default";
+import MallResults from "components/mall/results";
+import QueryContextProvider, { useQueryContext } from "context/queryProvider";
+import MallEmpty from "components/mall/empty";
+import MallCategory from "components/mall/category";
+import { StoreCategory } from "context/models";
 
-import { getData } from "../../lib/supabase";
-import useSupabase from "../../lib/useSupabase";
-import { data, storeCat } from "../../lib/data";
+const Init = () => {
+    const [refreshing, setRefreshing] = useState(false);
+    const queryState = useQueryContext();
+    const { refresh, loading } = useStoresContext();
+    const { user } = useGlobalContext();
+    const [category, setCategory] = useState<StoreCategory>();
+    
+    const scrollY = useRef(new Animated.Value(0)).current;
+    
+    const searchBarTranslateY = scrollY.interpolate({
+        inputRange: [0, 70], // Adjust the range based on your header height
+        outputRange: [0, -70],
+        extrapolate: 'clamp',
+    });
 
-const Mall = () => {
-  const { data: cat, refetch } = useSupabase(getData);
-  const [refreshing, setRefreshing] = useState(false);
+    const clearCategory = () => setCategory(undefined);
+    
+    const onRefresh = async () => {
+        setRefreshing(true);
+        await refresh();
+        setRefreshing(false);
+    };
 
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await refetch();
-    setRefreshing(false);
-  };
+    const scrolling = (event: NativeSyntheticEvent<NativeScrollEvent>) =>{
+        scrollY.setValue(event.nativeEvent.contentOffset.y);
+        Animated.event(
+            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+            { useNativeDriver: true }
+        )
+    }
 
-  // console.log(typeof cat.data.length / 3)
-
-  return (
-    <SafeAreaView className="bg-white h-full">
-      <ScrollView
-            refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }>
-            <View className="">
-            <View className="my-4 mx-6 flex flex-row items-center justify-between">
-              <Text className="font-inter font-semibold text-black text-sm">
-                Hi Theophilus Tarri, {"\n"}Where will you order from today?
-              </Text>
-              <TouchableOpacity activeOpacity={0.6}>
-                <Image source={Bell} className="justify-self-end" />
-              </TouchableOpacity>
+    const content = () =>{
+        if(queryState.inFocus){
+            return <MallResults />;
+        }else if(category){
+            return <MallCategory category={category} clear={clearCategory}/>
+        }else if(queryState.inFocus && !queryState.loading && queryState.results.length === 0){
+            return <MallEmpty />
+        }
+        return <MallDefault chosenCategory={setCategory}/>;
+    }
+    
+    return (
+        <SafeAreaView className="bg-white h-full">
+            <View style={styles.container}>
+                <Animated.View style={[styles.header, { transform: [{ translateY: searchBarTranslateY }] }]}>
+                    <View className="my-4 mx-6 flex flex-row items-center justify-between">
+                        <Text className="font-inter font-semibold text-black text-sm">
+                            { `Hi ${user?.user_metadata.firstname} ${user?.user_metadata.lastname}, \nWhere will you order from today?` }
+                        </Text>
+                        <TouchableOpacity activeOpacity={0.6}>
+                            <Image source={Bell} className="justify-self-end" />
+                        </TouchableOpacity>
+                    </View>
+                    <View className="mx-6">
+                        <Search value={queryState.value} handleChangeText={queryState.onQueryChange} onFocus={queryState.setFocus} />
+                    </View>
+                </Animated.View>
+                <ScrollView 
+                    contentContainerStyle={styles.scrollContent}
+                    onScroll={scrolling}
+                      scrollEventThrottle={16}
+                    refreshControl={ <RefreshControl refreshing={loading} onRefresh={onRefresh} /> }>
+                    { content() }
+                </ScrollView>
             </View>
-            <View className="mx-6">
-              <Search value={""} />
-            </View>
-            <View className="my-2 ml-6">
-              <Text className="font-inter font-bold text-black text-base mb-2">
-                Food categories
-              </Text>
-              <View className="">
-                <CatSideScroll data={cat.data} />
-              </View>
-            </View>
-            <MainMall data={data} catData={storeCat} />
-          </View>
-        </ScrollView>
-    </SafeAreaView>
-  );
+        </SafeAreaView>
+    );
 };
+
+const styles = StyleSheet.create({
+    container: { 
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    header: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1,
+        backgroundColor: '#fff',
+    },
+    scrollContent: {
+        paddingTop: 140, // Adjust this based on your header height
+        paddingBottom: 70
+    },
+    item: {
+        padding: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+    },
+});
+
+const Mall: React.FC = () =>{
+    return (
+        <QueryContextProvider>
+            <Init />
+        </QueryContextProvider>
+    );
+}
 
 export default Mall;
