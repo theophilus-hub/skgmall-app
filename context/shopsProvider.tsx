@@ -44,7 +44,6 @@ const StoresContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const fetch = async () =>{
         try{
             const response = await load();
-            console.log(JSON.stringify(response));
             setState(init => { return { ...init, ...response } });
         }catch(error){
             console.error(error);
