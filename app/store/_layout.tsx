@@ -1,16 +1,10 @@
-import { Stack } from 'expo-router';
-import { Platform } from 'react-native';
+import { Stack, useLocalSearchParams } from 'expo-router';
 
-
-const RootLayout = () => {
-    const statusConfig: { style?: "dark", bgColor?: string } = Platform.OS === "android" ? { style: "dark", bgColor: "white" } : {};
-
+export default () => {
     return (
-        <Stack screenOptions={{  statusBarStyle: statusConfig.style, statusBarBackgroundColor: statusConfig.bgColor }}>
-            <Stack.Screen name='index' options={{ headerShown: false }} />
+        <Stack>
             <Stack.Screen name='[id]' options={{ headerShown: false }} />
+            <Stack.Screen name='food' options={{ headerShown: false }}/>
         </Stack>
     );
 }
-
-export default RootLayout

@@ -1,34 +1,42 @@
-import { View, Text, TextInput, TouchableOpacity, Image, NativeSyntheticEvent, TextInputFocusEventData } from 'react-native';
-import React, { useRef, useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Image, NativeSyntheticEvent, TextInputFocusEventData, TextInputProps } from 'react-native';
+import React, { PropsWithRef, useEffect, useRef, useState } from 'react';
 import search from '../assets/images/tabs/mall/search.png';
-import CancelIcon from 'assets/cancel';
 import BackIcon from 'assets/back';
-
-export interface SearchProps{
-    placeholder?: string,
-    value: string,
-    handleChangeText?: (text: string) => void
-    onFocus?: (focus: boolean) => void
+interface SearchProps extends TextInputProps{
+    onFocusChange?: (focus: boolean) => void
 }
 
+export interface SearchInputRef {
+    focus: () => void;
+    clear: () => void;
+}
 
-const Search: React.FC<SearchProps> = ({placeholder, value, handleChangeText, onFocus}) => {
-    const input = useRef<TextInput>(null);
+const Search = React.forwardRef<SearchInputRef, PropsWithRef<SearchProps>>((props, ref) => {
+    const inputRef = useRef<TextInput>(null);
     const [inFocus, setFocus] = useState(false);
 
+    // Expose methods to the parent component via ref
+    React.useImperativeHandle(ref, () => ({
+        focus: () => inputRef.current?.focus(),
+        clear: () => {
+            inputRef.current?.clear();
+            inputRef.current?.blur();
+        },
+    }));
+    
     const enter = () => {
-        onFocus && onFocus(true);
+        props.onFocusChange && props.onFocusChange(true);
         setFocus(true);
     }
     const leave = () => {
-        onFocus && onFocus(false);
+        props.onFocusChange && props.onFocusChange(false);
         setFocus(false);
     }
 
     const cancel = () =>{
-        if(input.current !== null){
-            input.current.clear();
-            input.current.blur();
+        if(inputRef.current !== null){
+            inputRef.current.clear();
+            inputRef.current.blur();
         }
     }
 
@@ -38,13 +46,13 @@ const Search: React.FC<SearchProps> = ({placeholder, value, handleChangeText, on
             { inFocus && <TouchableOpacity onPress={cancel}>
                 <BackIcon color={"grey"} />
             </TouchableOpacity> }    
-            <TextInput ref={input} onFocus={enter} onBlur={leave}
+            <TextInput ref={inputRef} onFocus={enter} onBlur={leave}
                 className='text-black opacity-80 font-inter font-medium text-sm px-2' style={{ flex: 1 }}
                 placeholder='Search SKG Mall'
                 placeholderTextColor='#606060'
-                onChangeText={handleChangeText} /> 
+                onChangeText={props.onChangeText} /> 
       </View>
     )
-}
+});
 
 export default Search

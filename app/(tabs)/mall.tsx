@@ -1,36 +1,80 @@
-import { View, Text, ScrollView, Image, TouchableOpacity, RefreshControl, Animated, StyleSheet, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import { View, Text, ScrollView, Image, TouchableOpacity, RefreshControl, Animated, StyleSheet, NativeSyntheticEvent, NativeScrollEvent, BackHandler, Alert } from "react-native";
+import React, { useMemo, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import Bell from "../../assets/images/tabs/mall/bell.png";
 
-import Search from "../../components/search";
+import Search, { SearchInputRef } from "../../components/search";
 import { useStoresContext } from "context/shopsProvider";
 import { useGlobalContext } from "context/GlobalProvider";
 import MallDefault from "components/mall/default";
 import MallResults from "components/mall/results";
 import QueryContextProvider, { useQueryContext } from "context/queryProvider";
-import MallEmpty from "components/mall/empty";
 import MallCategory from "components/mall/category";
 import { StoreCategory } from "context/models";
+import { useRouter, useFocusEffect } from "expo-router";
+
+enum ContentMode{
+    default, search, category
+}
 
 const Init = () => {
+    const router = useRouter();
     const [refreshing, setRefreshing] = useState(false);
     const queryState = useQueryContext();
     const { refresh, loading } = useStoresContext();
     const { user } = useGlobalContext();
     const [category, setCategory] = useState<StoreCategory>();
+    const searchRef = useRef<SearchInputRef>(null);
+
+    const mode = useMemo(()=>{
+        if(queryState.inFocus){
+            return ContentMode.search;
+        }else if(category){
+            return ContentMode.category;
+        }
+        return ContentMode.default;
+    }, [queryState.inFocus, category]);
     
-    const scrollY = useRef(new Animated.Value(0)).current;
-    
+    const scrollY = useRef(new Animated.Value(0)).current;    
     const searchBarTranslateY = scrollY.interpolate({
         inputRange: [0, 70], // Adjust the range based on your header height
         outputRange: [0, -70],
         extrapolate: 'clamp',
     });
 
-    const clearCategory = () => setCategory(undefined);
+    const handleBack = () => {
+        Alert.alert('Confirm', 'Are you sure you want to quit ?',
+            [ { text: 'Cancel', style: 'cancel' }, { text: 'Yes', onPress: () => router.dismissAll() } ]
+        );
+    };
+
+    useFocusEffect(() => {
+        const onBackPress = () => {
+            switch(mode){
+                case ContentMode.category:
+                    clearCategory();
+                    break;
+                case ContentMode.search:
+                    if(searchRef.current !== null){
+                        searchRef.current.clear();
+                    }
+                    break;
+                default:
+                    handleBack();
+            }
+            return true;
+        };
     
+        BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    
+        return () => {
+          BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+        };
+    });
+
+    const clearCategory = () => setCategory(undefined);
+
     const onRefresh = async () => {
         setRefreshing(true);
         await refresh();
@@ -45,16 +89,16 @@ const Init = () => {
         )
     }
 
-    const content = () =>{
-        if(queryState.inFocus){
-            return <MallResults />;
-        }else if(category){
-            return <MallCategory category={category} clear={clearCategory}/>
-        }else if(queryState.inFocus && !queryState.loading && queryState.results.length === 0){
-            return <MallEmpty />
-        }
-        return <MallDefault chosenCategory={setCategory}/>;
-    }
+    const content = useMemo(() =>{
+        switch(mode){
+            case ContentMode.search:
+                return <MallResults />;
+            case ContentMode.category:
+                return <MallCategory category={category} clear={clearCategory}/>
+            case ContentMode.default:
+                return <MallDefault chosenCategory={setCategory}/>;
+        }    
+    },[mode]);
     
     return (
         <SafeAreaView className="bg-white h-full">
@@ -64,20 +108,20 @@ const Init = () => {
                         <Text className="font-inter font-semibold text-black text-sm">
                             { `Hi ${user?.user_metadata.firstname} ${user?.user_metadata.lastname}, \nWhere will you order from today?` }
                         </Text>
-                        <TouchableOpacity activeOpacity={0.6}>
+                        <TouchableOpacity activeOpacity={0.6} onPress={ ()=> router.push("/notifications") }>
                             <Image source={Bell} className="justify-self-end" />
                         </TouchableOpacity>
                     </View>
                     <View className="mx-6">
-                        <Search value={queryState.value} handleChangeText={queryState.onQueryChange} onFocus={queryState.setFocus} />
+                        <Search ref={searchRef} value={queryState.value} onChangeText={queryState.onQueryChange} onFocusChange={queryState.setFocus} />
                     </View>
                 </Animated.View>
                 <ScrollView 
                     contentContainerStyle={styles.scrollContent}
                     onScroll={scrolling}
                       scrollEventThrottle={16}
-                    refreshControl={ <RefreshControl refreshing={loading} onRefresh={onRefresh} /> }>
-                    { content() }
+                    refreshControl={ <RefreshControl refreshing={refreshing} onRefresh={onRefresh} /> }>
+                    { content }
                 </ScrollView>
             </View>
         </SafeAreaView>
