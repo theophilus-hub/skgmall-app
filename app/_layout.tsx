@@ -32,10 +32,11 @@ const RootLayout = () => {
                 <Stack screenOptions={{  statusBarStyle: statusConfig.style, statusBarBackgroundColor: statusConfig.bgColor }}>
                     <Stack.Screen name='index' options={{ headerShown: false }} />
                     <Stack.Screen name='welcome' options={{ headerShown: false }} />
-                    <Stack.Screen name='notifications' options={{ headerShown: false }} />
-                    <Stack.Screen name='store' options={{ headerShown: false }} />
                     <Stack.Screen name='(auth)' options={{ headerShown: false, }} />
                     <Stack.Screen name='(tabs)' options={{ headerShown: false}} />
+                     <Stack.Screen name='notifications' options={{ headerShown: false }} />
+                    <Stack.Screen name='store' options={{ headerShown: false }} />
+                    <Stack.Screen name='profile' options={{ headerShown: false }} />
                 </Stack>
             </MultiProvider>
         </PaperProvider>
