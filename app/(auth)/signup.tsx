@@ -75,8 +75,8 @@ const Signup = () => {
 
     const convert = (): RegistrationDetails =>{
         return { 
-            email: form.email.value, firstname: form.firstname.value, lastname: form.lastname.value,
-            phone: form.phone.value, password: form.password.value, location: form.location.value!.label, state: form.state.value!.label
+            email: form.email.value.toLowerCase(), firstname: form.firstname.value.toLowerCase().replace(/\b\w/g,  (char: string)=> char.toUpperCase()), lastname: form.lastname.value.toLowerCase().replace(/\b\w/g,  (char: string)=> char.toUpperCase()),
+            phone: form.phone.value, password: form.password.value, location: form.location.value!.label.toLowerCase(), state: form.state.value!.label.toLowerCase().replace(/\b\w/g,  (char: string)=> char.toUpperCase())
         }
     }
 

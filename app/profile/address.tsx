@@ -20,7 +20,7 @@ const Address = () => {
             <ScrollView className='bg-white'>
                 <View className='w-full h-16 py-4 my-2 flex justify-start items-center'>
                     <View className=' px-4 flex flex-row w-full items-center justify-center h-8 my-2'>
-                        <TouchableOpacity onPress={() => router.push("/profile/info")} activeOpacity={0.4} className='absolute z-10 left-4'>
+                        <TouchableOpacity onPress={() => router.back()} activeOpacity={0.4} className='absolute z-10 left-4'>
                             <Image source={back} />
                         </TouchableOpacity>
                         <Text className='font-bold text-base'>Personal Infomation</Text>
@@ -28,9 +28,9 @@ const Address = () => {
 
                 </View>
                 <View className='w-full flex justify-center items-center px-6'>
-                    <View className={'flex my-2 flex-row w-full bg-notwhite  h-[38] rounded-[100px] px-2 pb-2 justify-start content-center items-center focus:border-slate-300 focus:border-2'}>
+                    <View className={'flex my-2 flex-row w-full bg-notwhite  h-[38] rounded-[100px] px-2 py-2 justify-start content-center items-center focus:border-slate-300 focus:border-2'}>
                         <TextInput
-                            className=' text-black opacity-80 font-inter font-medium text-sm w-[100%] h-8 pb-1 '
+                            className=' text-black opacity-80 font-inter font-medium text-sm w-[100%] h-10 pb-1 px-2'
                             placeholder='Input new address'
                             placeholderTextColor='#2D2D2DCC'
                         />
