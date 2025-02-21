@@ -14,6 +14,7 @@ const RootLayout = () => {
             <Stack.Screen name='settings' options={{ headerShown: false }} />
             <Stack.Screen name='terms' options={{ headerShown: false }} />
             <Stack.Screen name='privacy' options={{ headerShown: false }} />
+            <Stack.Screen name='delete' options={{ headerShown: false }} />
 
         </Stack>
     );

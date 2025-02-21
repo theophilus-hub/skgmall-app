@@ -19,7 +19,7 @@ const EditField: React.FC<FormFieldProps>  = ({placeholder, value, handeChangeTe
   return (
     <View className={'flex my-2 flex-row w-full bg-notwhite  h-[38] rounded-[10px] px-2 py-2 justify-start content-center items-center ' + (isvalid ? "focus:border-slate-300 focus:border-2" : "border-red-300 border-2")}>
       <TextInput
-        className=' text-black opacity-80 font-inter font-medium text-sm w-[100%] h-10 pb-1'
+        className=' text-black opacity-80 font-inter font-medium text-sm w-[100%] h-10'
         placeholder={placeholder}
         value={value}
         placeholderTextColor='#2D2D2DCC'
