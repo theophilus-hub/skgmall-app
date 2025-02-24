@@ -41,11 +41,11 @@ const Profile = () => {
                
                <View className='w-full flex-1'>
                 <Options text='Personal information' link='profile/info' icon={userIcon}/>
-                <Options text='Payment information' link='store' icon={card}/>
-                <Options text='Support' link='store' icon={group}/>
-                <Options text='Settings' link='store' icon={settings}/>
-                <Options text='Terms & Conditions' link='store' icon={terms}/>
-                <Options text='Privacy Policy' link='store' icon={shield}/>
+                <Options text='Payment information' link='profile/payment' icon={card}/>
+                <Options text='Support' link='profile/support' icon={group}/>
+                <Options text='Settings' link='profile/settings' icon={settings}/>
+                <Options text='Terms & Conditions' link='profile/terms' icon={terms}/>
+                <Options text='Privacy Policy' link='profile/privacy' icon={shield}/>
                </View>
                </ScrollView>
 
