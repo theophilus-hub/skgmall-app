@@ -3,6 +3,7 @@ import { useFonts } from 'expo-font'
 import { useEffect, useMemo } from 'react';
 
 import GlobalProvider from '../context/GlobalProvider';
+import { EditProvider } from 'context/editContext';
 import SettingsContextProvider from 'context/settingsContext';
 import MultiProvider from 'context/multiprovider';
 import { Provider as PaperProvider } from "react-native-paper";
@@ -28,7 +29,7 @@ const RootLayout = () => {
 
     return (
         <PaperProvider>
-            <MultiProvider providers={[GlobalProvider, SettingsContextProvider, StoresContextProvider]}>
+            <MultiProvider providers={[GlobalProvider, SettingsContextProvider, StoresContextProvider, EditProvider]}>
                 <Stack screenOptions={{  statusBarStyle: statusConfig.style, statusBarBackgroundColor: statusConfig.bgColor }}>
                     <Stack.Screen name='index' options={{ headerShown: false }} />
                     <Stack.Screen name='welcome' options={{ headerShown: false }} />

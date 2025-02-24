@@ -26,6 +26,10 @@ const DeleteInfo: React.FC<DeleteInfoProps> = ({label, value}) => {
             </View>
         </View>
       </View>
+      <View className='w-full flex items-center justify-center mt-4 px-6'>
+        <View className='w-full h-[1px] bg-notwhite'/>
+      </View>
+      
     </View>
   )
 }

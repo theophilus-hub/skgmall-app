@@ -7,8 +7,15 @@ const RootLayout = () => {
 
     return (
         <Stack screenOptions={{  statusBarStyle: statusConfig.style, statusBarBackgroundColor: statusConfig.bgColor }}>
-            <Stack.Screen name='index' options={{ headerShown: false }} />
             <Stack.Screen name='info' options={{ headerShown: false }} />
+            <Stack.Screen name='address' options={{ headerShown: false }} />
+            <Stack.Screen name='payment' options={{ headerShown: false }} />
+            <Stack.Screen name='support' options={{ headerShown: false }} />
+            <Stack.Screen name='settings' options={{ headerShown: false }} />
+            <Stack.Screen name='terms' options={{ headerShown: false }} />
+            <Stack.Screen name='privacy' options={{ headerShown: false }} />
+            <Stack.Screen name='delete' options={{ headerShown: false }} />
+
         </Stack>
     );
 }
