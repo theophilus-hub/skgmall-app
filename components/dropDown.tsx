@@ -10,6 +10,7 @@ import {
   } from "react-native";
   import React, { useCallback, useRef, useState } from "react";
   import { AntDesign } from "@expo/vector-icons";
+import CancelIcon from "assets/cancel";
   
   export type OptionItem = {
     value: string;
@@ -20,12 +21,13 @@ import {
     data: OptionItem[];
     onChange: (item: OptionItem) => void;
     placeholder: string;
-    value?: OptionItem
+    value?: OptionItem;
+    cancel?: CallableFunction,
   }
   
-  export default function Dropdown({ data, onChange, placeholder, value }: DropDownProps) {
+  export default function Dropdown({ data, onChange, placeholder, value, cancel }: DropDownProps) {
     const [state, setState] = useState<{ expanded: boolean, value?: OptionItem, top: number }>({ expanded: false, value, top: 0 });
-    const buttonRef = useRef<View>(null);
+    //const buttonRef = useRef<View>(null);
 
     const toggleExpanded = () => setState((init)=> {
         console.log(init.expanded);
@@ -43,8 +45,10 @@ import {
         onChange(item);
     };
 
+    const onCancel = () => cancel && cancel();
+
     return (
-        <View className="my-2" ref={buttonRef}
+        <View className="my-2" //ref={buttonRef}
             onLayout={(event) => {
                 const layout = event.nativeEvent.layout;
                 const topOffset = layout.y;
@@ -55,12 +59,19 @@ import {
                     return { ...init, top: finalValue }
                 });
         }}>
-        <TouchableOpacity className="bg-notwhite h-[48px] flex flex-row justify-between items-center rounded-lg pl-8 pr-4 text-notblack font-semibold"
-            activeOpacity={0.8}
-            onPress={toggleExpanded}>
-            <Text className=" text-black font-medium text-sm">{state.value?.value || placeholder}</Text>
-            <AntDesign className=""  name={state.expanded ? "caretup" : "caretdown"} />
-        </TouchableOpacity>
+        <View style={{ flexDirection: "row", alignItems: "center" }} className="bg-notwhite h-[48px] rounded-lg pl-3 pr-3 focus:border-slate-300 focus:border-2">
+            <TouchableOpacity style={{ flex: 1 }} className="flex-row justify-between items-center text-notblack font-semibold"
+                activeOpacity={0.8}
+                onPress={toggleExpanded}>
+                <Text className=" text-black font-medium text-sm">{state.value?.value || placeholder}</Text>
+                <AntDesign className=""  name={state.expanded ? "caretup" : "caretdown"} />
+            </TouchableOpacity>
+            { cancel && (
+                <TouchableOpacity className="ml-1" onPress={onCancel}>
+                    <CancelIcon color={"grey"} height={20}/>
+                </TouchableOpacity>
+            )}
+        </View>
         {state.expanded ? (
             <Modal visible={state.expanded} transparent>
                 <TouchableWithoutFeedback onPress={close}>

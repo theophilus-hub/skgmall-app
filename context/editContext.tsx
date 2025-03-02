@@ -1,17 +1,32 @@
 import React, { createContext, useContext, useState } from "react";
 
-const EditContext = createContext({
-  activeEdit: null as string | null,
-  setActiveEdit: (id: string | null) => {},
-});
+interface UserEditState{
+    active: String | undefined
+}
 
-export const EditProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const [activeEdit, setActiveEdit] = useState<string | null>(null);
-  return (
-    <EditContext.Provider value={{ activeEdit, setActiveEdit }}>
-      {children}
-    </EditContext.Provider>
-  );
+interface UserEditContextState extends UserEditState{
+    makeActive: (id: String) => void,
+    done: CallableFunction
+}
+
+const UserEditContext = createContext<UserEditContextState | null>(null);
+export const useUserEditContext = () => {
+    const init = useContext(UserEditContext);
+    if(init === null){
+        throw Error("Component has to be wrapped by UserEditProvider in oder to call UserEditContext");
+    }
+    return init;
+}
+
+export const UserEditProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+    const [ state, setState] = useState<UserEditState>({ active: undefined });
+    
+    const makeActive = (id: String) => setState({ active: id })
+    const done = async () => setState({ active: undefined })
+    
+    return (
+        <UserEditContext.Provider value={{ ...state, makeActive, done }}>
+            {children}
+        </UserEditContext.Provider>
+    );
 };
-
-export const useEditContext = () => useContext(EditContext);
