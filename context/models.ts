@@ -44,3 +44,13 @@ export type StoreCategory = {
     name: string;
     uid: string;
 }
+
+export type ProfileModel = {
+    id: string,
+    email: string,
+    firstname: string,
+    lastname: string,
+    phone: string,
+    state: string,
+    location: string,
+}

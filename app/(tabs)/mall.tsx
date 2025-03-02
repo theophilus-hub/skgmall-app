@@ -23,7 +23,7 @@ const Init = () => {
     const [refreshing, setRefreshing] = useState(false);
     const queryState = useQueryContext();
     const { refresh, loading } = useStoresContext();
-    const { user } = useGlobalContext();
+    const { profile } = useGlobalContext();
     const [category, setCategory] = useState<StoreCategory>();
     const searchRef = useRef<SearchInputRef>(null);
 
@@ -106,7 +106,7 @@ const Init = () => {
                 <Animated.View style={[styles.header, { transform: [{ translateY: searchBarTranslateY }] }]}>
                     <View className="my-4 mx-6 flex flex-row items-center justify-between">
                         <Text className="font-inter font-semibold text-black text-sm">
-                            { `Hi ${user?.user_metadata.firstname} ${user?.user_metadata.lastname}, \nWhere will you order from today?` }
+                            { `Hi ${profile?.firstname} ${profile?.lastname}, \nWhere will you order from today?` }
                         </Text>
                         <TouchableOpacity activeOpacity={0.6} onPress={ ()=> router.push("/notifications") }>
                             <Image source={Bell} className="justify-self-end" />

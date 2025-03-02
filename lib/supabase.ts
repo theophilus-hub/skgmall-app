@@ -79,9 +79,12 @@ export async function clientSession() {
 }
 
 export async function getUser() {
-  const { data: { user } } = await supabase.auth.getUser();
-
-  return user;
+    const { data: { user } } = await supabase.auth.getUser();
+    const { data: profile } = await supabase.from("profiles").select("*").eq("id", user?.id);
+    
+    if(user && profile){
+        return [ user, profile[0] ];
+    }
 }
 
 export async function getData(){

@@ -14,7 +14,7 @@ import terms from '../../assets/images/tabs/profile/terms.png'
 
 const Profile = () => {
     const { autoLogin, themeMode, setThemeMode, toggleAutoLogin } = useSettings();
-    const { user } = useGlobalContext()
+    const { profile } = useGlobalContext()
     const [refreshing, setRefreshing] = useState(false);
     
     
@@ -31,9 +31,9 @@ const Profile = () => {
                     <View className='p-2 h-36 flex justify-start items-center space-y-2' >
                         <Image source={dpm} className='' />
                         <View className='flex justify-center items-center text-center'>
-                            <Text className='font-normal text-sm'>{user?.user_metadata.firstname.replace(/\b\w/g,  (char: string)=> char.toUpperCase())} {user?.user_metadata.lastname.replace(/\b\w/g,  (char: string)=> char.toUpperCase())}</Text>
-                        <Text className='font-normal text-sm'>{user?.user_metadata.phone}</Text>
-                        <Text className='font-normal text-sm'>{user?.email}</Text>
+                            <Text className='font-normal text-sm'>{profile?.firstname.replace(/\b\w/g,  (char: string)=> char.toUpperCase())} {profile?.lastname.replace(/\b\w/g,  (char: string)=> char.toUpperCase())}</Text>
+                        <Text className='font-normal text-sm'>{profile?.phone}</Text>
+                        <Text className='font-normal text-sm'>{profile?.email}</Text>
                         </View>
                         
                     </View>

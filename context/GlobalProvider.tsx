@@ -1,11 +1,12 @@
 import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { getUser, signInWithEmail, supabase } from "../lib/supabase";
 import { User } from "@supabase/supabase-js";
-import { Credentials, RegistrationDetails } from "./models";
+import { Credentials, ProfileModel, RegistrationDetails } from "./models";
 
 interface GlobalState{
     isLoading: boolean,
     user?: User,
+    profile?: ProfileModel,
     error?: any
 }
 
@@ -13,6 +14,7 @@ export interface GlobalContextType extends GlobalState {
     isLoggedIn: boolean,
     login: (details: Credentials) => Promise<void>,
     register: (details: RegistrationDetails)=> Promise<void>
+    update: (data: Partial<RegistrationDetails>) => Promise<void>
 }
 
 const GlobalContext = createContext<GlobalContextType | null>(null);
@@ -29,25 +31,26 @@ const GlobalProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     const [state, setState] = useState<GlobalState>({ isLoading: false });
 
     useEffect(() => {
-        if(state.user === undefined){
+        if(state.user === undefined || state.profile === undefined){
             getUser().then((res) => {
                 if(res){
-                    setState(init => { return { ...init, user: res } }); 
-                }else{
-                    setState(init => { return { ...init, user: undefined } }); 
+                    const [ user, profile ] = res!;
+                    if(user && profile){
+                        setState(init => { return { ...init, user: user, profile: profile } }); 
+                    }
                 }
             }).catch((error) => {
                 console.log(error)
             }).finally(() => setState(init => { return { ...init, isLoading: false } }));
         }
-    }, [state.user]);
+    }, [state.user, state.profile]);
 
     const isLoggedIn = useMemo(()=> state.user !== null, [state.user]);
 
     const login = async(details: Credentials) =>{
         setState(init => { return { ...init, isLoading: true } });
         const { data, error } = await supabase.auth.signInWithPassword({email: details.email, password: details.password});
-//  console.log(`I am logging in as ${JSON.stringify(data.user)}`);
+        //  console.log(`I am logging in as ${JSON.stringify(data.user)}`);
         setState(init => { return { ...init, user: data.user === null ? undefined :  data.user, isLoading: false, error: error } });
         if(data.user === null){
             console.log(error)
@@ -73,8 +76,18 @@ const GlobalProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
         }
     }
 
+    const update = async(data: Partial<RegistrationDetails>)=>{
+        const response = await supabase.from('profiles').update(data).eq("id", state.user?.id).select();
+        if(response.error !== null){
+            return Promise.reject(response.error);
+        }
+
+        console.log(JSON.stringify(response.data));
+        setState(init => { return { ...init, profile: response.data[0] } });
+    }
+
     return(
-        <GlobalContext.Provider value={{ ...state, login, register, isLoggedIn }}>
+        <GlobalContext.Provider value={{ ...state, login, register, update, isLoggedIn }}>
             {children}
         </GlobalContext.Provider>
     );
